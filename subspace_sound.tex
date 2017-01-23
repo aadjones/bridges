@@ -18,6 +18,7 @@
 
 % -----------------------------------------------------------------------------
 
+
 \title{Hearing Fluid Subspaces (placeholder)}
 \author{ Aaron Demby Jones\\
 Department of Media Arts and Technology\\ University of California, Santa Barbara\\
@@ -52,6 +53,7 @@ Pixar Animation Studios\\
 \newcommand{\R}{\mathbb{R}}
 % -----------------------------------------------------------------------------
 
+
 \maketitle
 
 % Prevent page number 1 from being printed on the first page.
@@ -68,7 +70,7 @@ Pixar Animation Studios\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Introduction}
-In 1787, Ernst Chladni demonstrated a physical experiment to visually reveal the modes of vibration of a rigid surface. By placing sand over a metal plate and running a violin bow along the edge, he excited the plate at different resonant frequencies, forcing the sand to accumulate along the corresponding nodal curves and producing a number of beautiful patterns. Mathematically, these correspond to the eigenfunctions of the biharmonic operator $\Delta^2$ on a square domain with free boundary conditions. Inspired by this phenomenon, we consider an analogy in computational fluid dynamics in which particles of smoke are placed in a domain and an underlying velocity field is excited at different resonant frequencies, pushing the smoke around accordingly. We also construct a sonification of these frequencies to produce a mapping between fluid trajectories and sound.
+In 1787, Ernst Chladni demonstrated a physical experiment to visually reveal the modes of vibration of a rigid surface. By placing sand over a metal plate and running a violin bow along the edge, he excited the plate at different resonant frequencies, forcing the sand to accumulate along the corresponding nodal curves and producing a number of beautiful patterns \cite{Chladni}. Mathematically, these correspond to the eigenfunctions of the biharmonic operator $\Delta^2$ on a square domain with free boundary conditions, as discussed extensively by Gander and Wanner \cite{gander2012euler}. Inspired by this phenomenon, we consider an analogy in computational fluid dynamics in which particles of smoke are placed in a domain and an underlying velocity field is excited at different resonant frequencies, pushing the smoke around accordingly. We also construct a sonification of these frequencies to produce a mapping between fluid trajectories and sound.
 
 \begin{figure*}
 \centering
@@ -89,30 +91,9 @@ In 1787, Ernst Chladni demonstrated a physical experiment to visually reveal the
 \end{figure*}
 
 \section*{Subspace fluids}
-(/PLACEHOLDER)
-While many subspace fluid simulation algorithms have been developed for computer graphics, they all use Galerkin projection. The basic strategy of this approach is to represent a large-dimensional velocity field in terms of a linear combination of a small number of carefully chosen basis vectors. To that end, a large-dimensional velocity field that contains $3N$ degrees of freedom over $N$ grid cells is projected into a smaller, $r$-dimensional velocity subspace $S \simeq \R^{r}$ using a static linear basis. We denote this change-of-basis matrix as $\UU \in \R^{3N \times r}$, where each column of $\UU$ is itself a velocity field. Specifically, we can project a vector $\uu \in \R^{3N}$ down to its reduced-order counterpart $\qq \in \R^r$ by computing the product $\UU^T \uu = \qq$. In a well-designed subspace simulation, the velocity fields spanned by the columns of $\UU$; i.e., the subspace $S$, will be sufficient to capture the space of fields that interest the user. This projection often occurs at the beginning of each timestep, as a force vector $\ff$ that contains important information such as user inputs, buoyancy, and vorticity confinement forces must be projected into the subspace.
+Many approaches to fluid simulation in computer graphics numerically solve the incompressible Navier-Stokes equations on a regular spatial grid. Unfortunately, the nonlinearity of these equations and the sensitivity of the resulting flow to small-scale effects means that high-quality results are extremely time-consuming to compute. One strategy for speeding up these computations is the subspace approach, or model reduction. In this method, we consider our velocity field on a regular three-dimensional grid of $N$ cells abstractly as the real vector space $\R^{3N}$. We then discover a collection of linearly independent vectors $v_1, \ldots, v_r \in \R^{3N}$, with $r \ll N$. (For the strategy to work, the subspace $S \subset \R^{3N}$ spanned by these vectors must capture the fluid motions of interest.) Letting $P \colon \R^{3N} \rightarrow S$ denote the projection from $\R^{3N}$ to $S$, we can represent this projection in coordinates with a matrix $\UU \in \R^{3N \times r}$. That is, given a vector $\uu_t \in \R^{3N}$ at time step $t$, we can compute its reduced-order counterpart $\qq_t \in S$ by computing $\UU^T \uu_t = \qq_t$. At each time step $t$, we integrate the equations of motion for $\qq \in S$ to advance forward to $\qq_{t+1} \in S$. Being over a reduced number of variables, this phase is greatly accelerated compared to the full-space integration. Once the integration is complete, we must reverse the projection so that the results can be displayed in the original space of full coordinates. This reconstruction can be achieved simply by computing $\uu_{t+1} = \UU\qq_{t+1}$.
 
-Once this projection has been performed, the equations of motion can be integrated over this reduced number of variables very quickly. This can be done using exponential integration, Stable Fluids-like semi-Lagrangian advection coupled with Chorin projection, variational integration, or even simple explicit Euler integration. Once time integration has been performed, the change-of-basis must be reversed so that the results can be displayed. This is known as the ``velocity reconstruction'' stage. The most direct method is a {\em full} reconstruction where the $3N$-dimensional velocity field is reconstructed directly, i.e.~$\uu = \UU\qq$; and it is the approach we take in this paper.
-(/endPLACEHOLDER)
-
-In previous work, the subspace $S$ is discovered by first performing an appropriate training simulation at the full dimension and performing a singular value decomposition. Discarding the singular values less than a small threshold leaves us with $r$ singular values, with $r \ll 3N$, and their corresponding $r$ singular vectors, which are the basis vectors in the full space $\R^{3N}$ that generate $S$. In an analogy to the Chladni plate vibrations, these singular vectors correspond to the eigenfunctions, and the singular values correspond to the frequencies.
-
-
-%\begin{figure*}
-  %\begin{subfigure}[h]{0.62\textwidth}
-    %\includegraphics[width=\textwidth]{Figures/principal_singular.eps}
-%    \caption{Comparison of compression errors for plume.}
-    %\label{fig:principal}
-  %\end{subfigure}
-  %
-  % \begin{subfigure}[h]{0.62\textwidth}
-    %\includegraphics[width=\textwidth]{Figures/min_singular.eps}
- %   \caption{Comparison of compression errors for sphere.}
-    %\label{fig:min}
-    %\end{subfigure}
-     % \vspace{-3em}
- %\caption{Principal singular vector and minimal singular vector for the plume scene, respectively.}
-%\end{figure*}
+There are several strategies for discovering a useful subspace $S$, both analytical and statistical in nature. In work by de Witt \cite{deWitt:2012} the subspace $S$ is determined analytically by eigenfunctions of the Laplacian operator on a box up to a desired threshold frequency. In previous work by Kim \cite{Kim2013}, the subspace $S$ is statistically discovered by first performing an appropriate training simulation in full coordinates and performing a singular value decomposition over a matrix $A$ whose columns are velocity fields at each time step. Discarding the singular values less than a small threshold leaves us with $r$ singular values, with $r \ll 3N$, and their corresponding $r$ singular vectors, which are the basis vectors in the full space $\R^{3N}$ that generate $S$. In either the analytical or statistical case, in analogy to the Chladni plate vibrations, the singular vectors correspond to the eigenfunctions, and the singular values correspond to the frequencies. Because the eigenfunctions of the Laplacian operator on a box are well-known to be separable products of sine and cosine functions, we used the statistical approach to generating the subspace $S$ in this paper so that we could discover newer, more unfamiliar modes.
     
 For each time step of the subspace re-simulation, when we perform the reconstruction phase, obtaining a full-space velocity field $\vv \in \R^{3N}$ from a reduced-order subspace vector $\qq \in \R^r$, we are simply taking a linear combination of the $r$ singular vectors using the corresponding coefficients given by the entries of $\qq$.
 Hence, the subspace vectors $q$ can be intuitively thought of as instructions for how to mix together the corresponding singular vectors with the appropriate weightings. Indeed, we can even identify a path $\varphi \colon [0, 1] \rightarrow S$, sampled at $T$ timesteps $\varphi_1, \ldots, \varphi_T$, as determining the corresponding $T$ timesteps of the full-space re-simulation, after reconstruction.
