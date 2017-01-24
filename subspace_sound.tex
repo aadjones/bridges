@@ -63,7 +63,7 @@ The intricate shapes and sounds that arise from the eigenvectors of vibrating Ch
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Introduction}
-Chladni plates beautifully reveal the vibration modes, also known as the eigenvectors, of a rigid plate (Fig.~\ref{fig:chladni-drawn}). These eigenvectors can be computed analytically, as they correspond to very small deformations (i.e.~vibrations) on a very simple domain, and can be written in terms of the Bi-Laplacian operator $(\Delta^2)$ over a square domain \cite{gander2012euler}. These visual representations can be extended to more complex scenarios, where the eigenvectors and their corresponding eigenvalues are instead computed numerically. In this work, we compute the eigenvectors of a dynamic computational fluid dynamics simulation, which involves large deformations instead of small vibrations, and the Navier-Stokes equations in lieu of a Bi-Laplacian. We then visualize the turbulent motion of the eigenvectors in this spectral representation, and construct a sonification of the resulting frequencies to produce a mapping between fluid trajectories and sound. The results are organic visual forms with a unique visual character, and sounds with \todo{say something nice about the sounds}.
+Chladni plates beautifully reveal the vibration modes, also known as the eigenvectors, of a rigid plate (Fig.~\ref{fig:chladni-drawn}). These eigenvectors can be computed analytically, as they correspond to very small deformations (i.e.~vibrations) on a very simple domain, and can be written in terms of the Bi-Laplacian operator $(\Delta^2)$ over a square domain \cite{gander2012euler}. These visual representations can be extended to more complex scenarios, where the eigenvectors and their corresponding eigenvalues are instead computed numerically. In this work, we compute the eigenvectors of a dynamic computational fluid dynamics simulation, which involves large deformations instead of small vibrations, and the Navier-Stokes equations in lieu of a Bi-Laplacian. We then visualize the turbulent motion of the eigenvectors in this spectral representation, and construct a sonification of the resulting frequencies to produce a mapping between fluid trajectories and sound. The results are organic visual forms with a unique visual character, and a variety of associated sounds that unfold over rich spectral envelopes.
 
 \begin{figure*}
 \centering
@@ -135,52 +135,41 @@ Given a sequence $(\qq_j)$ of vectors that describe a sampled trajectory $\qq_1,
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{Figures/renders/plume0007.png}
-			%\caption{A table of hand-drawn Chladni figures. Source: Wikimedia Commons.}
-		%\label{fig:chladni-drawn}
 	\end{subfigure}
-	%
-	% \hspace{3em}
+	%	
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{Figures/renders/plume0008.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
+		\includegraphics[width=\textwidth]{Figures/renders/plume0008.png}	
 	\end{subfigure}
+	%
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{Figures/renders/plume0009.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
 	\end{subfigure}
+	%
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{Figures/renders/plume0014.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
 	\end{subfigure}
+	%
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{Figures/renders/plume0021.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
+		\includegraphics[width=\textwidth]{Figures/renders/plume0021.png}	
 	\end{subfigure}
+	%
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{Figures/renders/plume0030.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
 	\end{subfigure}
+	%
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{Figures/renders/plume0052.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
+		\includegraphics[width=\textwidth]{Figures/renders/plume0052.png}		
 	\end{subfigure}
+	%
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{Figures/renders/plume0108.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
+		\includegraphics[width=\textwidth]{Figures/renders/plume0108.png}		
 	\end{subfigure}
 	\caption{An assortment of subspace fluid modes.}
 \end{figure*}
