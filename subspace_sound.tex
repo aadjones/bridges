@@ -18,20 +18,12 @@
 
 % -----------------------------------------------------------------------------
 
-\title{Hearing Fluid Subspaces (placeholder)}
-\author{ Aaron Demby Jones\\
-Department of Media Arts and Technology\\ University of California, Santa Barbara\\
-{\tt aaron.demby.jones@mat.ucsb.edu}
-\and
-JoAnn Kuchera-Morin\\
-Department of Media Arts and Technology\\ University of California, Santa Barbara\\
-{\tt jkm@create.ucsb.edu}
-\and
-Theodore Kim\\
-Pixar Animation Studios\\ 
-{\tt tkim@pixar.com}
+\title{Seeing and Hearing the Eigenvectors of a Fluid}
+\author{ Aaron Demby-Jones, JoAnn Kuchera-Morin and Theodore Kim\\
+Media Arts and Technology Program\\ University of California, Santa Barbara\\
+{\tt aaron.demby.jones@mat.ucsb.edu, jkm@create.ucsb.edu, kim@mat.ucsb.edu}
 }
-
+% TK: MAT is a Program, not a Department. On my side, this is an MAT project, not a Pixar project.
 
 % \date{[Draft as of \today]}	% For your own draft purposes
 \date{}				% Suppress any date on submissions
@@ -51,6 +43,8 @@ Pixar Animation Studios\\
 \newcommand{\aaa}{\mathbf{a}}
 \newcommand{\R}{\mathbb{R}}
 % -----------------------------------------------------------------------------
+% Ted's commands
+\newcommand{\todo}[1]{$\spadesuit$ {\bf #1} $\spadesuit$}
 
 \maketitle
 
@@ -58,7 +52,7 @@ Pixar Animation Studios\\
 \thispagestyle{empty}
 
 \begin{abstract}
-(Placeholder.)
+The intricate shapes and sounds that arise from the eigenvectors of vibrating Chladni plates are a well-known phenomenon. We explore a similar phenomenon by computing and visualizing the patterns formed by the empirical eigenvectors of a computational fluid dynamics simulation. The eigenvectors form complex, turbulent, spatial patterns. The eigenvalues form a spectrum that does not possess a unique sonic mapping, so we construct a sonification that allows us to listen to the trajectory of the fluid.
 \end{abstract}
 
 % Bridges papers are usually no more than 8 pages in length.  So
@@ -68,7 +62,8 @@ Pixar Animation Studios\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Introduction}
-In 1787, Ernst Chladni demonstrated a physical experiment to visually reveal the modes of vibration of a rigid surface. By placing sand over a metal plate and running a violin bow along the edge, he excited the plate at different resonant frequencies, forcing the sand to accumulate along the corresponding nodal curves and producing a number of beautiful patterns. Mathematically, these correspond to the eigenfunctions of the biharmonic operator $\Delta^2$ on a square domain with free boundary conditions. Inspired by this phenomenon, we consider an analogy in computational fluid dynamics in which particles of smoke are placed in a domain and an underlying velocity field is excited at different resonant frequencies, pushing the smoke around accordingly. We also construct a sonification of these frequencies to produce a mapping between fluid trajectories and sound.
+
+Chladni plates beautifully reveal the vibration modes, also known as the eigenvectors, of a rigid plate (Fig.~\ref{fig:chladni-drawn}). These eigenvectors can be computed analytically, as they correspond to very small deformations (i.e.~vibrations) on a very simple domain, and can be written in terms of the Laplacian operator $(\Delta)$ over a square domain. These visual representations can be extended to more complex scenarios, where the eigenvectors and their corresponding eigenvalues are instead computed numerically. In this work, we compute the eigenvectors of a dynamic computational fluid dynamics simulation, which involves large deformations instead of small vibrations, and the Navier-Stokes equations in lieu of a Laplacian. We then visualize the turbulent motion of the eigenvectors in this spectral representation, and construct a sonification of the resulting frequencies to produce a mapping between fluid trajectories and sound. The results are organic visual forms with a unique visual character, and sounds with \todo{say something nice about the sounds}.
 
 \begin{figure*}
 \centering
