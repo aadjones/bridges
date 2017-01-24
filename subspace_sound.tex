@@ -19,7 +19,7 @@
 % -----------------------------------------------------------------------------
 
 \title{Seeing and Hearing the Eigenvectors of a Fluid}
-\author{ Aaron Demby-Jones, JoAnn Kuchera-Morin and Theodore Kim\\
+\author{ Aaron Demby Jones, JoAnn Kuchera-Morin and Theodore Kim\\
 Media Arts and Technology Program\\ University of California, Santa Barbara\\
 {\tt aaron.demby.jones@mat.ucsb.edu, jkm@create.ucsb.edu, kim@mat.ucsb.edu}
 }
@@ -46,6 +46,7 @@ Media Arts and Technology Program\\ University of California, Santa Barbara\\
 % Ted's commands
 \newcommand{\todo}[1]{$\spadesuit$ {\bf #1} $\spadesuit$}
 
+
 \maketitle
 
 % Prevent page number 1 from being printed on the first page.
@@ -62,8 +63,7 @@ The intricate shapes and sounds that arise from the eigenvectors of vibrating Ch
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Introduction}
-
-Chladni plates beautifully reveal the vibration modes, also known as the eigenvectors, of a rigid plate (Fig.~\ref{fig:chladni-drawn}). These eigenvectors can be computed analytically, as they correspond to very small deformations (i.e.~vibrations) on a very simple domain, and can be written in terms of the Laplacian operator $(\Delta)$ over a square domain. These visual representations can be extended to more complex scenarios, where the eigenvectors and their corresponding eigenvalues are instead computed numerically. In this work, we compute the eigenvectors of a dynamic computational fluid dynamics simulation, which involves large deformations instead of small vibrations, and the Navier-Stokes equations in lieu of a Laplacian. We then visualize the turbulent motion of the eigenvectors in this spectral representation, and construct a sonification of the resulting frequencies to produce a mapping between fluid trajectories and sound. The results are organic visual forms with a unique visual character, and sounds with \todo{say something nice about the sounds}.
+Chladni plates beautifully reveal the vibration modes, also known as the eigenvectors, of a rigid plate (Fig.~\ref{fig:chladni-drawn}). These eigenvectors can be computed analytically, as they correspond to very small deformations (i.e.~vibrations) on a very simple domain, and can be written in terms of the Bi-Laplacian operator $(\Delta^2)$ over a square domain \cite{gander2012euler}. These visual representations can be extended to more complex scenarios, where the eigenvectors and their corresponding eigenvalues are instead computed numerically. In this work, we compute the eigenvectors of a dynamic computational fluid dynamics simulation, which involves large deformations instead of small vibrations, and the Navier-Stokes equations in lieu of a Bi-Laplacian. We then visualize the turbulent motion of the eigenvectors in this spectral representation, and construct a sonification of the resulting frequencies to produce a mapping between fluid trajectories and sound. The results are organic visual forms with a unique visual character, and sounds with \todo{say something nice about the sounds}.
 
 \begin{figure*}
 \centering
@@ -81,36 +81,15 @@ Chladni plates beautifully reveal the vibration modes, also known as the eigenve
 		\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
 		\label{fig:chladni-plate}
 	\end{subfigure}
+	\caption{Chladni figures, both hand-drawn and experimentally realized.}
 \end{figure*}
 
 \section*{Subspace fluids}
-(/PLACEHOLDER)
-While many subspace fluid simulation algorithms have been developed for computer graphics, they all use Galerkin projection. The basic strategy of this approach is to represent a large-dimensional velocity field in terms of a linear combination of a small number of carefully chosen basis vectors. To that end, a large-dimensional velocity field that contains $3N$ degrees of freedom over $N$ grid cells is projected into a smaller, $r$-dimensional velocity subspace $S \simeq \R^{r}$ using a static linear basis. We denote this change-of-basis matrix as $\UU \in \R^{3N \times r}$, where each column of $\UU$ is itself a velocity field. Specifically, we can project a vector $\uu \in \R^{3N}$ down to its reduced-order counterpart $\qq \in \R^r$ by computing the product $\UU^T \uu = \qq$. In a well-designed subspace simulation, the velocity fields spanned by the columns of $\UU$; i.e., the subspace $S$, will be sufficient to capture the space of fields that interest the user. This projection often occurs at the beginning of each timestep, as a force vector $\ff$ that contains important information such as user inputs, buoyancy, and vorticity confinement forces must be projected into the subspace.
+Many approaches to fluid simulation in computer graphics numerically solve the incompressible Navier-Stokes equations on a regular spatial grid. Unfortunately, the nonlinearity of these equations and the sensitivity of the resulting flow to small-scale effects means that high-quality results are extremely time-consuming to compute. One strategy for speeding up these computations is the subspace approach, or model reduction. In this method, we consider our velocity field on a regular three-dimensional grid of $N$ cells abstractly as the real vector space $\R^{3N}$. We then discover a collection of linearly independent vectors $v_1, \ldots, v_r \in \R^{3N}$, with $r \ll N$. (For the strategy to work, the subspace $S \subset \R^{3N}$ spanned by these vectors must capture the fluid motions of interest.) Letting $P \colon \R^{3N} \rightarrow S$ denote the projection from $\R^{3N}$ to $S$, we can represent this projection in coordinates with a matrix $\UU \in \R^{3N \times r}$. That is, given a vector $\uu_t \in \R^{3N}$ at time step $t$, we can compute its reduced-order counterpart $\qq_t \in S$ by computing $\UU^T \uu_t = \qq_t$. At each time step $t$, we integrate the equations of motion for $\qq \in S$ to advance forward to $\qq_{t+1} \in S$. Being over a reduced number of variables, this phase is greatly accelerated compared to the full-space integration. Once the integration is complete, we must reverse the projection so that the results can be displayed in the original space of full coordinates. This reconstruction can be achieved simply by computing $\uu_{t+1} = \UU\qq_{t+1}$.
 
-Once this projection has been performed, the equations of motion can be integrated over this reduced number of variables very quickly. This can be done using exponential integration, Stable Fluids-like semi-Lagrangian advection coupled with Chorin projection, variational integration, or even simple explicit Euler integration. Once time integration has been performed, the change-of-basis must be reversed so that the results can be displayed. This is known as the ``velocity reconstruction'' stage. The most direct method is a {\em full} reconstruction where the $3N$-dimensional velocity field is reconstructed directly, i.e.~$\uu = \UU\qq$; and it is the approach we take in this paper.
-(/endPLACEHOLDER)
-
-In previous work, the subspace $S$ is discovered by first performing an appropriate training simulation at the full dimension and performing a singular value decomposition. Discarding the singular values less than a small threshold leaves us with $r$ singular values, with $r \ll 3N$, and their corresponding $r$ singular vectors, which are the basis vectors in the full space $\R^{3N}$ that generate $S$. In an analogy to the Chladni plate vibrations, these singular vectors correspond to the eigenfunctions, and the singular values correspond to the frequencies.
-
-
-%\begin{figure*}
-  %\begin{subfigure}[h]{0.62\textwidth}
-    %\includegraphics[width=\textwidth]{Figures/principal_singular.eps}
-%    \caption{Comparison of compression errors for plume.}
-    %\label{fig:principal}
-  %\end{subfigure}
-  %
-  % \begin{subfigure}[h]{0.62\textwidth}
-    %\includegraphics[width=\textwidth]{Figures/min_singular.eps}
- %   \caption{Comparison of compression errors for sphere.}
-    %\label{fig:min}
-    %\end{subfigure}
-     % \vspace{-3em}
- %\caption{Principal singular vector and minimal singular vector for the plume scene, respectively.}
-%\end{figure*}
+There are several strategies for discovering a useful subspace $S$, both analytical and statistical in nature. In work by de Witt \cite{deWitt:2012} the subspace $S$ is determined analytically by eigenfunctions of the Laplacian operator on a box up to a desired threshold frequency. In previous work by Kim \cite{Kim2013}, the subspace $S$ is statistically discovered by first performing an appropriate training simulation in full coordinates and performing a singular value decomposition over a matrix $A$ whose columns are velocity fields at each time step. Discarding the singular values less than a small threshold leaves us with $r$ singular values, with $r \ll 3N$, and their corresponding $r$ singular vectors, which are the basis vectors in the full space $\R^{3N}$ that generate $S$. In either the analytical or statistical case, in analogy to the Chladni plate vibrations, the singular vectors correspond to the eigenfunctions, and the singular values correspond to the frequencies. Because the eigenfunctions of the Laplacian operator on a box are well-known to be separable products of sine and cosine functions, we use the statistical approach to generating the subspace $S$ in this paper in order to discover more unfamiliar modes.
     
-For each time step of the subspace re-simulation, when we perform the reconstruction phase, obtaining a full-space velocity field $\vv \in \R^{3N}$ from a reduced-order subspace vector $\qq \in \R^r$, we are simply taking a linear combination of the $r$ singular vectors using the corresponding coefficients given by the entries of $\qq$.
-Hence, the subspace vectors $q$ can be intuitively thought of as instructions for how to mix together the corresponding singular vectors with the appropriate weightings. Indeed, we can even identify a path $\varphi \colon [0, 1] \rightarrow S$, sampled at $T$ timesteps $\varphi_1, \ldots, \varphi_T$, as determining the corresponding $T$ timesteps of the full-space re-simulation, after reconstruction.
+For each time step of the subspace re-simulation, when we perform the reconstruction phase, obtaining a full-space velocity field $\vv \in \R^{3N}$ from a reduced-order subspace vector $\qq \in \R^r$, we are simply taking a linear combination of the $r$ singular vectors using the corresponding coefficients given by the entries of $\qq$. Hence, the subspace vectors $q$ can be intuitively thought of as instructions for how to mix together the corresponding singular vectors with the appropriate weightings. Indeed, we can even identify a path $\varphi \colon [0, 1] \rightarrow S$, sampled at $T$ timesteps $\varphi_1, \ldots, \varphi_T$, as determining the corresponding $T$ timesteps of the full-space re-simulation, after reconstruction.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Sonification}
@@ -119,18 +98,19 @@ We interpret the $r$ singular values $\sigma_1, \ldots, \sigma_r$ from the singu
 \begin{figure*}
 	\begin{subfigure}[h]{0.5\textwidth}
 		\includegraphics[width=\textwidth]{figures/singulars.eps}
-		\caption{\textbf{Singular values: r = 50.} Note the logarithmic scale on the y-axis.}
+		\caption{Singular values: r = 150} 
 		\label{fig:singulars}
 	\end{subfigure}
 	%
 	\begin{subfigure}[h]{0.5\textwidth}
 		\includegraphics[width=\textwidth]{figures/remap_freqs.eps}
-		\caption{\textbf{Remapped frequencies: f = 128 Hz, s = 6.} Note again the logarithmic scale on the y-axis.}
+		\caption{Remapped frequencies: f = 64 Hz, s = 1.75}
 		\label{fig:freqs}
 	\end{subfigure}
+	\caption{Note the logarithmic scale on both y-axes. The red lines on both plots indicate the bounds of the human audible frequency range.}
 \end{figure*}
 
-There are two immediate concerns about the raw data. Firstly, from Figure \ref{fig:singulars}, we see that the values range over approximately $12$ orders of magnitude, which is approximately $40$ octaves. However, the human audible dynamic range is generally considered to be from $20$ Hz to $20000$ Hz, which is only about $10$ octaves. Thus, we will have to rescale the octaves into an appropriate range. Secondly, starting from the principal singular value, the singular values are decreasing, whereas an audio spectrum increases from its fundamental frequency. Hence, we will have to invert the singular values. One way to proceed with a sensible mapping is to specify a desired fundamental frequency $f$ and an octave scaling $s$. Writing our audible frequencies as $f_1, \ldots, f_r$, we can define our mapping from singular values to audible frequencies as follows:
+There are two immediate concerns about the raw data. Firstly, from Figure \ref{fig:singulars}, we see that the values range over approximately $4$ orders of magnitude, which is approximately $13$ octaves, and decrease to numbers less than $1$. However, the human audible dynamic range is generally considered to be from $20$ Hz to $20000$ Hz, which is only about $10$ octaves, and starts greater than $1$. Thus, we will have to rescale the octaves into an appropriate range and recenter the data. Secondly, starting from the principal singular value, the singular values are decreasing, whereas an audio spectrum increases from its fundamental frequency. Hence, we will have to invert the singular values. One way to proceed with a sensible mapping is to specify a desired fundamental frequency $f$ and an octave scaling $s$. Writing our audible frequencies as $f_1, \ldots, f_r$, we can define our mapping from singular values to audible frequencies as follows:
 
 \begin{equation} 
 \begin{aligned}
@@ -139,9 +119,9 @@ f_i &= f \cdot \left(\frac{\sigma_{i}^{-1}}{\sigma_{\textnormal{max}}^{-1}}\righ
 \end{aligned}
 \end{equation}
 
-The effect of this remapping can be seen in Figure \ref{fig:freqs}, where we have used a fundamental frequency $f = 128$ Hz and an octave scaling of $s = 6$. The spectrum now begins at the fundamental, $f = 128$ Hz, and ranges up to a maximum of approximately $14000$ Hz, an acceptable spread.
+The effect of this remapping can be seen in Figure \ref{fig:freqs}, where we have used a fundamental frequency $f = 64$ Hz and an octave scaling of $s = 1.75$. The spectrum now begins at the fundamental, $f = 64$ Hz, and ranges up to a maximum of approximately $15000$ Hz, an acceptable spread.
 
-With an audible spectrum in hand, we now turn to the problem of choosing amplitudes for each individual frequency. These can be mapped from a corresponding subspace vector $\qq \in S$, as each of its $r$ components, $q_1, \ldots, q_r$ can be thought of as an amplitude for the $r$ corresponding frequencies $f_1, \ldots, f_r$. Care must be taken here too, as the overall sum of all the frequencies can exceed unity gain, and thus lead to clipping. Mathematically, this means that we require the $L^1$ norm of $\qq$, $\lvert\qq\rvert_1 = \sum_{i=1}^{r}\lvert q_i \rvert$, to be at most $1$. A typical subspace vector $\qq$ may also contain negative components. However, these can simply be thought of as encoding a positive amplitude and a reversal of phase. The phase reversal can be discarded, as its perceivable effect is typically undesirable clicking artifacts.
+With an audible spectrum in hand, we now turn to the problem of choosing amplitudes for each individual frequency. These can be mapped from a corresponding subspace vector $\qq \in S$, as each of its $r$ components, $q_1, \ldots, q_r$ can be thought of as an amplitude for the $r$ corresponding frequencies $f_1, \ldots, f_r$. Care must be taken here too, as the overall sum of all the frequencies can exceed unity gain, which would lead to clipping. Mathematically, this means that we require the $L^1$ norm of $\qq$, $\lvert\qq\rvert_1 = \sum_{i=1}^{r}\lvert q_i \rvert$, to be at most $1$. A typical subspace vector $\qq$ may also contain negative components. However, these can simply be thought of as encoding a positive amplitude and a reversal of phase. The phase reversal can be discarded, as its perceivable effect is typically undesirable clicking artifacts.
 
 With these considerations in hand, we design a mapping from a subspace vector $\qq$ to an amplitude vector $\aaa$ of unit $L^1$ norm as follows:
 \begin{equation}
@@ -149,13 +129,12 @@ With these considerations in hand, we design a mapping from a subspace vector $\
 a_i &= \frac{\lvert q_i \rvert}{\lvert\qq\rvert_1}, \ i = 1, \ldots, r.
 \end{aligned}
 \end{equation}
-Given a sequence $(\qq_j)$ of vectors that describe a sampled trajectory $\qq_1, \ldots, \qq_T$ through the subspace $S$, we can either normalize each one of the corresponding amplitude vectors on an individual basis, or we can determine the subspace vector of maximum $L^1$ norm, $\qq_{\textnormal{max}}$, and normalize each amplitude vector based on $\lvert\qq_{\textnormal{max}}\rvert_1$. The effect of the former is a relatively uniform volume level, while the effect of the latter is usually a significant audible decay from the first time step to the last, as in general, the first few $\qq$ vectors have a significantly higher $L^1$ norm than the remaining. Each approach thus has its musical merit, depending on the compositional situation.
-
+Given a sequence $(\qq_j)$ of vectors that describe a sampled trajectory $\qq_1, \ldots, \qq_T$ through the subspace $S$, we can either normalize each one of the corresponding amplitude vectors on an individual basis, or we can determine the subspace vector of maximum $L^1$ norm, $\qq_{\textnormal{max}}$, and normalize each amplitude vector based on $\lvert\qq_{\textnormal{max}}\rvert_1$. The effect of the former is a relatively uniform volume level, while the effect of the latter is usually a more variable volume envelope. Each approach has its own musical merit, depending on the compositional situation.
 
 \begin{figure*}
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{Figures/renders/plume0008.png}
+		\includegraphics[width=\textwidth]{Figures/renders/plume0007.png}
 			%\caption{A table of hand-drawn Chladni figures. Source: Wikimedia Commons.}
 		%\label{fig:chladni-drawn}
 	\end{subfigure}
@@ -163,31 +142,13 @@ Given a sequence $(\qq_j)$ of vectors that describe a sampled trajectory $\qq_1,
 	% \hspace{3em}
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
+		\includegraphics[width=\textwidth]{Figures/renders/plume0008.png}
+		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
+		%\label{fig:chladni-plate}
+	\end{subfigure}
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
 		\includegraphics[width=\textwidth]{Figures/renders/plume0009.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
-	\end{subfigure}
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/renders/plume0010.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
-	\end{subfigure}
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/renders/plume0011.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
-	\end{subfigure}
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/renders/plume0012.png}
-		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
-		%\label{fig:chladni-plate}
-	\end{subfigure}
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/renders/plume0013.png}
 		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
 		%\label{fig:chladni-plate}
 	\end{subfigure}
@@ -199,18 +160,36 @@ Given a sequence $(\qq_j)$ of vectors that describe a sampled trajectory $\qq_1,
 	\end{subfigure}
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{Figures/renders/plume0015.png}
+		\includegraphics[width=\textwidth]{Figures/renders/plume0021.png}
 		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
 		%\label{fig:chladni-plate}
 	\end{subfigure}
-	
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/renders/plume0030.png}
+		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
+		%\label{fig:chladni-plate}
+	\end{subfigure}
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/renders/plume0052.png}
+		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
+		%\label{fig:chladni-plate}
+	\end{subfigure}
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/renders/plume0108.png}
+		%\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
+		%\label{fig:chladni-plate}
+	\end{subfigure}
+	\caption{An assortment of subspace fluid modes.}
 \end{figure*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Synthesis}
-With our mappings carried out, we can now produce sensible audible sound. The most basic technique to try is additive synthesis---namely, mixing together pure sine tones at the corresponding frequencies and amplitudes, creating an overall sound with a rich spectral content. With an instrument in hand that can produce the corresponding sound given a set of input amplitudes (SuperCollider's `DynKlang' unit generator is a suitable choice), a particular trajectory $\phi \colon [0, 1] \rightarrow S$ through the subspace, while retaining the same set of frequencies throughout time, determines a time-varying set of amplitudes, allowing the subspace evolution to dictate the time evolution of the sound. The overall effect is a subtle change in timbre, as the amplitudes of the various overtones fluctuate.
+With our mappings carried out, we can now produce sensible audible sound. The most basic technique to try is additive synthesis---namely, mixing together pure sine tones at the corresponding frequencies and amplitudes, creating an overall sound with a rich spectral content. With an instrument in hand that can produce the corresponding sound given a set of input amplitudes, a particular trajectory $\phi \colon [0, 1] \rightarrow S$ through the subspace, while retaining the same set of frequencies throughout time, determines a time-varying set of amplitudes, allowing the subspace evolution to dictate the time evolution of the sound. The overall effect is a subtle change in timbre, as the amplitudes of the various overtones fluctuate. 
 
-Subtractive synthesis is also an interesting option. We start with a spectrally rich input sound, such as an impulse or broadband noise. We then create a filter bank of resonances at the appropriate set of frequencies, weighted in turn by the appropriate set of amplitudes. (The SuperCollider unit generator `DynKlank' is the point of departure on an implementation level.) Some extra parameters must be addressed, as each resonant mode also is given a ring time for the mode to decay by $60$ dB. The nature of the input sound also strongly influences the resulting timbre---broadband noise creates a more atmospheric effect, while impulses can create driving rhythmic textures. 
+Subtractive synthesis is also an interesting option. We start with a spectrally rich input sound, such as an impulse or broadband noise. We then create a filter bank of resonances at the appropriate set of frequencies, weighted in turn by the appropriate set of amplitudes. Some extra parameters must be addressed, as each resonant mode also is given a ring time for the mode to decay. The nature of the input sound also strongly influences the resulting timbre---broadband noise creates a more atmospheric effect, while impulses can create driving rhythmic textures. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Time evolution}
