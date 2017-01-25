@@ -42,6 +42,9 @@ Media Arts and Technology Program\\ University of California, Santa Barbara\\
 \newcommand{\qq}{\mathbf{q}}
 \newcommand{\aaa}{\mathbf{a}}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\subspace}{\mathbb{S}}
+\newcommand{\boldA}{\mathbf{A}}
+\newcommand{\VV}{\mathbf{V}}
 % -----------------------------------------------------------------------------
 % Ted's commands
 \newcommand{\todo}[1]{$\spadesuit$ {\bf #1} $\spadesuit$}
@@ -53,7 +56,7 @@ Media Arts and Technology Program\\ University of California, Santa Barbara\\
 \thispagestyle{empty}
 
 \begin{abstract}
-The intricate shapes and sounds that arise from the eigenvectors of vibrating Chladni plates are a well-known phenomenon. We explore a similar phenomenon by computing and visualizing the patterns formed by the empirical eigenvectors of a computational fluid dynamics simulation. The eigenvectors form complex, turbulent, spatial patterns. The eigenvalues form a spectrum that does not possess a unique sonic mapping, so we construct a sonification that allows us to listen to the trajectory of the fluid.
+The intricate shapes and sounds that arise from the eigenvectors of vibrating Chladni plates are a well-known phenomenon. We explore a generalization of this phenomenon by computing the patterns formed by the empirical eigenvectors of a computational fluid dynamics simulation. The eigenvectors form abstract, turbulent patterns in space, especially in the presence of non-physical excitations. The eigenvalues form a spectrum that does not possess a unique sonic mapping, so we construct a sonification that allows us to listen to the trajectory of the fluid.
 \end{abstract}
 
 % Bridges papers are usually no more than 8 pages in length.  So
@@ -63,33 +66,49 @@ The intricate shapes and sounds that arise from the eigenvectors of vibrating Ch
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Introduction}
-Chladni plates beautifully reveal the vibration modes, also known as the eigenvectors, of a rigid plate (Fig.~\ref{fig:chladni-drawn}). These eigenvectors can be computed analytically, as they correspond to very small deformations (i.e.~vibrations) on a very simple domain, and can be written in terms of the Bi-Laplacian operator $(\Delta^2)$ over a square domain \cite{gander2012euler}. These visual representations can be extended to more complex scenarios, where the eigenvectors and their corresponding eigenvalues are instead computed numerically. In this work, we compute the eigenvectors of a dynamic computational fluid dynamics simulation, which involves large deformations instead of small vibrations, and the Navier-Stokes equations in lieu of a Bi-Laplacian. We then visualize the turbulent motion of the eigenvectors in this spectral representation, and construct a sonification of the resulting frequencies to produce a mapping between fluid trajectories and sound. The results are organic visual forms with a unique visual character, and a variety of associated sounds that unfold over rich spectral envelopes.
+Chladni plates beautifully reveal the vibration modes, also known as the eigenvectors, of a rigid plate (Fig.~\ref{fig:chladni-plate}). These eigenvectors can be computed analytically, as they correspond to very small deformations (i.e.~vibrations) on a very simple domain, and can be written in terms of the Bi-Laplacian operator $(\Delta^2)$ over a square domain \cite{gander2012euler}. These visual representations can be extended to more complex scenarios, where the eigenvectors and their corresponding eigenvalues are instead computed numerically. In this work, we compute the eigenvectors of a dynamic computational fluid dynamics simulation, which involves large deformations instead of small vibrations, and the Navier-Stokes equations in lieu of a Bi-Laplacian. We then visualize the turbulent motion of the eigenvectors in this spectral representation, and construct a sonification of the resulting frequencies to produce a mapping between fluid trajectories and sound. The results are organic visual forms with a unique visual character, and a variety of associated sounds that unfold over rich spectral envelopes.
 
-\begin{figure*}
-\centering
-	\begin{subfigure}[h]{0.4\textwidth}
+\begin{figure}
+%\centering
+%	\begin{subfigure}[h]{0.4\textwidth}
+%		\centering
+%		\includegraphics[width=\textwidth]{Figures/chladni_drawing.png}
+%		\caption{A table of hand-drawn Chladni figures. Source: Wikimedia Commons.}
+%		\label{fig:chladni-drawn}
+%	\end{subfigure}
+%	%
+%	 \hspace{3em}
+%	\begin{subfigure}[h]{0.4\textwidth}
+%		\centering
+%		\includegraphics[width=\textwidth]{Figures/chladni_plate.jpg}
+%		\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
+%		\label{fig:chladni-plate}
+%	\end{subfigure}
+%	\caption{Chladni figures, both hand-drawn and experimentally realized.}
 		\centering
-		\includegraphics[width=\textwidth]{Figures/chladni_drawing.png}
-		\caption{A table of hand-drawn Chladni figures. Source: Wikimedia Commons.}
-		\label{fig:chladni-drawn}
-	\end{subfigure}
-	%
-	 \hspace{3em}
-	\begin{subfigure}[h]{0.4\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/chladni_plate.jpg}
-		\caption{The physical experiment with a rectangular plate. Source: Wikimedia Commons.}
+		\includegraphics[angle=90,origin=c, width=0.5\textwidth]{Figures/chladni_plate.jpg}
+		\vspace*{-2em}
+		\caption{Chladni patterns realized through a physical experiment with a rectangular plate. Source: Wikimedia Commons.}
 		\label{fig:chladni-plate}
-	\end{subfigure}
-	\caption{Chladni figures, both hand-drawn and experimentally realized.}
-\end{figure*}
+\end{figure}
 
-\section*{Subspace fluids}
-Many approaches to fluid simulation in computer graphics numerically solve the incompressible Navier-Stokes equations on a regular spatial grid. Unfortunately, the nonlinearity of these equations and the sensitivity of the resulting flow to small-scale effects means that high-quality results are extremely time-consuming to compute. One strategy for speeding up these computations is the subspace approach, or model reduction. In this method, we consider our velocity field on a regular three-dimensional grid of $N$ cells abstractly as the real vector space $\R^{3N}$. We then discover a collection of linearly independent vectors $v_1, \ldots, v_r \in \R^{3N}$, with $r \ll N$. (For the strategy to work, the subspace $S \subset \R^{3N}$ spanned by these vectors must capture the fluid motions of interest.) Letting $P \colon \R^{3N} \rightarrow S$ denote the projection from $\R^{3N}$ to $S$, we can represent this projection in coordinates with a matrix $\UU \in \R^{3N \times r}$. That is, given a vector $\uu_t \in \R^{3N}$ at time step $t$, we can compute its reduced-order counterpart $\qq_t \in S$ by computing $\UU^T \uu_t = \qq_t$. At each time step $t$, we integrate the equations of motion for $\qq \in S$ to advance forward to $\qq_{t+1} \in S$. Being over a reduced number of variables, this phase is greatly accelerated compared to the full-space integration. Once the integration is complete, we must reverse the projection so that the results can be displayed in the original space of full coordinates. This reconstruction can be achieved simply by computing $\uu_{t+1} = \UU\qq_{t+1}$.
+\section*{Empirical Eigenvectors of a Fluid}
 
-There are several strategies for discovering a useful subspace $S$, both analytical and statistical in nature. In work by de Witt \cite{deWitt:2012} the subspace $S$ is determined analytically by eigenfunctions of the Laplacian operator on a box up to a desired threshold frequency. In previous work by Kim \cite{Kim2013}, the subspace $S$ is statistically discovered by first performing an appropriate training simulation in full coordinates and performing a singular value decomposition over a matrix $A$ whose columns are velocity fields at each time step. Discarding the singular values less than a small threshold leaves us with $r$ singular values, with $r \ll 3N$, and their corresponding $r$ singular vectors, which are the basis vectors in the full space $\R^{3N}$ that generate $S$. In either the analytical or statistical case, in analogy to the Chladni plate vibrations, the singular vectors correspond to the eigenfunctions, and the singular values correspond to the frequencies. Because the eigenfunctions of the Laplacian operator on a box are well-known to be separable products of sine and cosine functions, we use the statistical approach to generating the subspace $S$ in this paper in order to discover more unfamiliar modes.
-    
-For each time step of the subspace re-simulation, when we perform the reconstruction phase, obtaining a full-space velocity field $\vv \in \R^{3N}$ from a reduced-order subspace vector $\qq \in \R^r$, we are simply taking a linear combination of the $r$ singular vectors using the corresponding coefficients given by the entries of $\qq$. Hence, the subspace vectors $q$ can be intuitively thought of as instructions for how to mix together the corresponding singular vectors with the appropriate weightings. Indeed, we can even identify a path $\varphi \colon [0, 1] \rightarrow S$, sampled at $T$ timesteps $\varphi_1, \ldots, \varphi_T$, as determining the corresponding $T$ timesteps of the full-space re-simulation, after reconstruction.
+In this work, we would like to compute the eigenvectors that arise from the Navier-Stokes equations for fluid flow. There are several different strategies for computing these vectors. For example, de Witt et al. \cite{deWitt:2012} computed the analytic eigenfunctions of the fluid velocity field over a simple square domain, and used it to advect (i.e.~push around) a particulate through space. These eigenfunctions are composed of separable products of sines and cosines, and the results visually correspond almost directly to classic Chladni patterns. \todo{TK: I suppose I could generate a figure for this}
+
+We are interested in generating less classical results, so we prefer the use of ``empirical'' eigenvectors \cite{Ryckelynck2005}. This approach goes many names, such as Proper Orthogonal Decomposition, Karhunen-Love expansion, or Hotelling transform, but we prefer the eigenvector nomenclature because it clarifies the connection to Chladni patterns. As the name suggests, it involves computing the eigenvectors of an empirically obtained data set, in this case the results of a computational fluid dynamics (CFD) simulation.
+
+The eigenvectors are constructed as follows. We have a velocity field defined on a regular three-dimensional grid of $N$ cells, which we consider abstractly as the real vector space $\R^{3N}$. The CFD simulation has been stepped over $T$ timesteps, so it provides $T$ velocity fields defined over this grid. We would then like to discover the $r$ most important eigenvectors of this data set, $\uu_1, \ldots, \uu_r \in \R^{3N}$. If we arrange the $T$ velocity fields of the CFD simulation into the columns of a matrix, we obtain $\boldA \in \R^{3N \times T}$. Taking the singular value decomposition (SVD) yields $\boldA = \UU \Sigma \VV^T$.
+
+The columns of $\UU$ are our ``empirical'' eigenvectors, and $\Sigma$ is a diagonal matrix of singular values. In some special cases, these values can correspond directly to audio frequencies, but in the general case of arbitrary CFD simulations we are considering, this correspondence is no longer uniquely determined. However, we will later take the sometimes existence of this correspondence as a launching point for our own sonification strategy. As we are only interested in the $r$ most important eigenvectors, we usually truncate $\UU$ to its first $r$ columns, yielding $\UU \in \R^{3N \times r}$.
+
+The columns of $\UU$ comprise an $r$-dimensional subspace $\R^r$ inside of $\R^{3N}$, and $\UU$ itself defines a projection operator. Given the $t$th velocity field from the original CFD simulation $\uu_t \in \R^{3N}$, we can compute a much smaller, ``reduced-order'' approximation of $\uu_t$ by computing $\UU^T \uu_t = \qq_t \in \R^r$. The fact that ``subspace'' coordinates can be constructed in this manner has attracted significant interest in the engineering community, because it is then often possible to run simulations, even those using the full Navier-Stokes equations, very quickly within this coordinate system \cite{Kim2013}. We are interested in this representation for two additional reasons. First, it is straightforward to interpret the entries in each $\qq_t$ as the amplitudes in a quasi-frequency spectrum. Therefore, they are a convenient starting point for constructing a sonic representation of fluid motion. Second, the projection can be reversed, or ``lifted''. Given an arbitrary sound $\qq$ that was constructed in the quasi-frequency spectrum, we can unambiguously translate that sound into a fluid motion by ``lifting'' the vector back to the $\R^{3N}$ space by computing $\UU \qq = \uu$. Therefore, we can use a sound to drive a fluid's motion.
+
+%At each time step $t$, we integrate the equations of motion for $\qq \in S$ to advance forward to $\qq_{t+1} \in S$. Being over a reduced number of variables, this phase is greatly accelerated compared to the full-space integration. Once the integration is complete, we must reverse the projection so that the results can be displayed in the original space of full coordinates. This reconstruction can be achieved simply by computing $\uu_{t+1} = \UU\qq_{t+1}$.
+%
+%There are several strategies for discovering a useful subspace $S$, both analytical and statistical in nature. In work by de Witt \cite{deWitt:2012} the subspace $S$ is determined analytically by eigenfunctions of the Laplacian operator on a box up to a desired threshold frequency. In previous work by Kim \cite{Kim2013}, the subspace $S$ is statistically discovered by first performing an appropriate training simulation in full coordinates and performing a singular value decomposition over a matrix $A$ whose columns are velocity fields at each time step. Discarding the singular values less than a small threshold leaves us with $r$ singular values, with $r \ll 3N$, and their corresponding $r$ singular vectors, which are the basis vectors in the full space $\R^{3N}$ that generate $S$. In either the analytical or statistical case, in analogy to the Chladni plate vibrations, the singular vectors correspond to the eigenfunctions, and the singular values correspond to the frequencies. Because the eigenfunctions of the Laplacian operator on a box are well-known to be separable products of sine and cosine functions, we use the statistical approach to generating the subspace $S$ in this paper in order to discover more unfamiliar modes.
+%    
+%For each time step of the subspace re-simulation, when we perform the reconstruction phase, obtaining a full-space velocity field $\vv \in \R^{3N}$ from a reduced-order subspace vector $\qq \in \R^r$, we are simply taking a linear combination of the $r$ singular vectors using the corresponding coefficients given by the entries of $\qq$. Hence, the subspace vectors $q$ can be intuitively thought of as instructions for how to mix together the corresponding singular vectors with the appropriate weightings. Indeed, we can even identify a path $\varphi \colon [0, 1] \rightarrow S$, sampled at $T$ timesteps $\varphi_1, \ldots, \varphi_T$, as determining the corresponding $T$ timesteps of the full-space re-simulation, after reconstruction.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Sonification}
