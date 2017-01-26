@@ -115,6 +115,8 @@ The columns of $\UU$ comprise an $r$-dimensional subspace $\R^r$ inside of $\R^{
 \section*{Visualization}
 To generate a suitably interesting subspace of possible motions, we generated six separate full-coordinate flows of a single plume of smoke moving toward each of the faces of a bounding box. After performing a singular value decomposition and truncating to $r = 150$ singular values and singular vectors, we obtained the desired subspace $S$. To reveal the shape of the modes, we ran a simulation with each of the modes sequentially isolated; i.e., each subspace vector $q_{t} \in S$ at time step $t$ was the vector with a $1$ in position $t$ and $0$ elsewhere.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ADJ: These are the 'coupled' modes, not as strong an analogy to the Chladni plates.
 \begin{figure*}
 	\begin{subfigure}[h]{0.5\textwidth}
 		\centering
@@ -155,8 +157,55 @@ To generate a suitably interesting subspace of possible motions, we generated si
 		\centering
 		\includegraphics[width=\textwidth]{Figures/renders/plume0108.png}		
 	\end{subfigure}
-	\caption{An assortment of subspace fluid modes.}
+	\caption{An assortment of subspace fluid modes. \todo{ADJ: These are the coupled modes from the `scale' that are not as strong an analogy to the Chladni figures.}}
 \end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ADJ: These are the more direct analogy to the Chladni figures.
+\begin{figure*}
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/modes/plume0000.png}
+	\end{subfigure}
+	%	
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/modes/plume0001.png}	
+	\end{subfigure}
+	%
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/modes/plume0002.png}
+	\end{subfigure}
+	%
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/modes/plume0003.png}
+	\end{subfigure}
+	%
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/modes/plume0004.png}	
+	\end{subfigure}
+	%
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/modes/plume0005.png}
+	\end{subfigure}
+	%
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/modes/plume0006.png}		
+	\end{subfigure}
+	%
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/modes/plume0007.png}		
+	\end{subfigure}
+	\caption{An assortment of subspace fluid modes. \todo{ADJ: These are the stronger analogy to the Chladni figures.}}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We can also step through the modes in a more physically faithful fashion. By gradually activating the modes one at a time without turning the previous ones off, the result when all $r$ are active converges to a physically accurate representation of the flow.
 
