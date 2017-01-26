@@ -166,6 +166,21 @@ Other non-physical approaches are possible to explore based on the following obs
 \section*{Sonification}
 We interpret the $r$ singular values $\sigma_1, \ldots, \sigma_r$ from the singular-value decomposition as characteristic frequencies. 
 
+\begin{figure*}
+	\begin{subfigure}[h]{0.5\textwidth}
+		\includegraphics[width=\textwidth]{figures/singulars.eps}
+		\caption{Singular values: r = 150} 
+		\label{fig:singulars}
+	\end{subfigure}
+	%
+	\begin{subfigure}[h]{0.5\textwidth}
+		\includegraphics[width=\textwidth]{figures/remap_freqs.eps}
+		\caption{Remapped frequencies: f = 64 Hz, s = 1.75}
+		\label{fig:freqs}
+	\end{subfigure}
+	\caption{Singular values and their remapped frequencies. Note the logarithmic scale on both y-axes. The red lines on both plots indicate the bounds of the human audible frequency range.}
+\end{figure*}
+
 There are two immediate concerns about the raw data. Firstly, from Figure \ref{fig:singulars}, we see that the values range over approximately $4$ orders of magnitude, which is approximately $13$ octaves, and decrease to numbers less than $1$. However, the human audible dynamic range is generally considered to be from $20$ Hz to $20000$ Hz, which is only about $10$ octaves, and starts greater than $1$. Thus, we will have to rescale the octaves into an appropriate range and recenter the data. Secondly, starting from the principal singular value, the singular values are decreasing, whereas an audio spectrum increases from its fundamental frequency. Hence, we will have to invert the singular values. One way to proceed with a sensible mapping is to specify a desired fundamental frequency $f$ and an octave scaling $s$. Writing our audible frequencies as $f_1, \ldots, f_r$, we can define our mapping from singular values to audible frequencies as follows:
 
 \begin{equation} 
