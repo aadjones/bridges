@@ -94,7 +94,31 @@ Chladni plates beautifully reveal the vibration modes, also known as the eigenve
 
 \section*{Empirical Eigenvectors of a Fluid}
 
-In this work, we would like to compute the eigenvectors that arise from the Navier-Stokes equations for fluid flow. There are several different strategies for computing these vectors. For example, de Witt et al. \cite{deWitt:2012} computed the analytic eigenfunctions of the fluid velocity field over a simple square domain, and used it to advect (i.e.~push) a particulate through space. These eigenfunctions are composed of separable products of sines and cosines, and the results visually correspond almost directly to classic Chladni patterns. \todo{TK: I suppose I could generate a figure for this}
+In this work, we would like to compute the eigenvectors that arise from the Navier-Stokes equations for fluid flow. There are several different strategies for computing these vectors. For example, de Witt et al. \cite{deWitt:2012} computed the analytic eigenfunctions of the fluid velocity field over a simple square domain, and used it to advect (i.e.~push) a particulate through space. These eigenfunctions are composed of separable products of sines and cosines, and the results visually correspond almost directly to classic Chladni patterns. \todo{TK: I suppose I could generate a figure for this.}
+
+\begin{figure*}
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/laplacians/plot1.eps}
+	\end{subfigure}
+	%	
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/laplacians/plot2.eps}
+	\end{subfigure}
+	%
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/laplacians/plot3.eps}
+	\end{subfigure}
+	%
+	\begin{subfigure}[h]{0.5\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{Figures/laplacians/plot4.eps}
+	\end{subfigure}
+	\caption{Analytic fluid velocity eigenfunctions on a cube. \todo{ADJ: Is this the kind of figure you had in mind, Ted?}}
+\end{figure*}
+
 
 We are interested in generating less classical results, so we prefer the use of ``empirical'' eigenvectors \cite{Ryckelynck2005}. This approach goes many names, such as the Proper Orthogonal Decomposition, Karhunen-Love expansion, or Hotelling transform, but we prefer the eigenvector nomenclature because it clarifies the connection to Chladni patterns. As the name suggests, it involves computing the eigenvectors of an empirically obtained data set, which in this case is the results of a computational fluid dynamics (CFD) simulation.
 
@@ -208,12 +232,12 @@ One of the challenges of subspace methods is the construction of an interesting 
 		\centering
 		\includegraphics[width=\textwidth]{Figures/modes/plume0007.png}		
 	\end{subfigure}
-	\caption{An assortment of subspace fluid modes.}
+	\caption{An assortment of subspace fluid empirical eigenvectors.}
 	\label{fig:eigs}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Other excitation strategies are also possible, including ones that are more closely guided by the physics that generated the original input data. We can gradually activate each eigenvector in sequence, and then push the resulting vector $\qq$ through existing subspace simulation algorithms which have automatically constructed approximate $\R^r$ versions of the Navier-Stokes equations \cite{Kim2013}. Less physical approaches are also possible by treating $\qq$ as a set of mixing weights. We can then construct arbitrary paths $\varphi \colon [0, 1] \rightarrow \R^r$, sampled at $T$ time steps $\varphi_1, \ldots, \varphi_T$, that determine the corresponding $T$ time steps of a full-coordinate velocity field. In this vein, we show the fluid simulation that results from of a random walk over an $r$-dimensional sphere with radius 1 in the supplemental video. \todo{TK: Take this sentence out if this isn't in the video.}
+Other excitation strategies are also possible, including ones that are more closely guided by the physics that generated the original input data. We can gradually activate each eigenvector in sequence, and then push the resulting vector $\qq$ through existing subspace simulation algorithms which have automatically constructed approximate $\R^r$ versions of the Navier-Stokes equations \cite{Kim2013}. Less physical approaches are also possible by treating $\qq$ as a set of mixing weights. We can then construct arbitrary paths $\varphi \colon [0, 1] \rightarrow \R^r$, sampled at $T$ time steps $\varphi_1, \ldots, \varphi_T$, that determine the corresponding $T$ time steps of a full-coordinate velocity field. In this vein, we show the fluid simulation that results from of a random walk over an $r$-dimensional sphere of constant radius in the supplemental video. % \todo{TK: Take this sentence out if this isn't in the video.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Sonification}
@@ -235,7 +259,7 @@ Other excitation strategies are also possible, including ones that are more clos
 
 We will devise a strategy for converting the motion of a fluid into a sound. As mentioned previously, one of the main advantages of the empirical eigenvectors approach is that it already yields a quasi-frequency spectrum. However, some additional choices need to be made before these vectors can be made audible. This sequence of subjective but judicious choices is known as sonification.
 
-We being by interpreting the $r$ singular values $\sigma_1, \ldots, \sigma_r$ from the singular-value decomposition as characteristic frequencies. There are two immediate concerns about this raw data. First, we can see in Figure \ref{fig:singulars} that the values range over approximately $4$ orders of magnitude, which is approximately $13$ octaves, and decrease to numbers less than $1$. However, the human audible dynamic range is approximately $20$ Hz to $20000$ Hz, which is only about $10$ octaves, and begins at a frequency $1$. Thus, we must somehow normalize the data to this audible range. Secondly, the singular value spectrum begins with a maximum value and then decreases, whereas an audio spectrum starts at fundamental frequency and then increases. Hence, we invert the singular values. One way to construct a practical mapping is to specify a fundamental frequency $f$ and octave scaling $s$. Writing our audible frequencies as $f_1, \ldots, f_r$, we can define our mapping from singular values to audible frequencies as follows:
+We being by interpreting the $r$ singular values $\sigma_1, \ldots, \sigma_r$ from the singular-value decomposition as characteristic frequencies. There are two immediate concerns about this raw data. First, we can see in Figure \ref{fig:singulars} that the values range over approximately $4$ orders of magnitude, which is approximately $13$ octaves, and decrease to numbers less than $1$. However, the human audible frequency range begins at $20$ Hz and spans approximately $10$ octaves, up to $20000$ Hz \cite{rosen2011signals}. Thus, we must somehow normalize the data to this audible range. Secondly, the singular value spectrum begins with a maximum value and then decreases, whereas an audio spectrum starts at fundamental frequency and then increases. Hence, we invert the singular values. One way to construct a practical mapping is to specify a fundamental frequency $f$ and octave scaling $s$. Writing our audible frequencies as $f_1, \ldots, f_r$, we can define our mapping from singular values to audible frequencies as follows:
 
 \begin{equation} 
 \begin{aligned}
