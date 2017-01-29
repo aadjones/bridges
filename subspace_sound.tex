@@ -86,39 +86,39 @@ Chladni plates beautifully reveal the vibration modes, also known as the eigenve
 %	\end{subfigure}
 %	\caption{Chladni figures, both hand-drawn and experimentally realized.}
 		\centering
-		\includegraphics[angle=90,origin=c, width=0.5\textwidth]{Figures/chladni_plate.jpg}
-		\vspace*{-2em}
-		\caption{Chladni patterns realized through a physical experiment with a rectangular plate. Source: Wikimedia Commons.}
+		\includegraphics[height=0.3\textwidth]{Figures/chladni_plate.jpg}
+		\includegraphics[height=0.3\textwidth]{Figures/LIC.jpg}
+%		\vspace*{-1em}
+		\caption{{\bf Left:} Chladni patterns realized through a physical experiment. {\em Source: Wikimedia Commons.} {\bf Right:} Analytic 2D eigenvector of the Navier-Stokes equations using the method of de Witt et al. \cite{deWitt:2012}.}
 		\label{fig:chladni-plate}
 \end{figure}
 
 \section*{Empirical Eigenvectors of a Fluid}
 
-In this work, we would like to compute the eigenvectors that arise from the Navier-Stokes equations for fluid flow. There are several different strategies for computing these vectors. For example, de Witt et al. \cite{deWitt:2012} computed the analytic eigenfunctions of the fluid velocity field over a simple square domain, and used it to advect (i.e.~push) a particulate through space. These eigenfunctions are composed of separable products of sines and cosines, and the results visually correspond almost directly to classic Chladni patterns. \todo{TK: I suppose I could generate a figure for this.}
+In this work, we would like to compute the eigenvectors that arise from the Navier-Stokes equations for fluid flow. There are several different strategies for computing these vectors. For example, de Witt et al. \cite{deWitt:2012} computed the analytic eigenfunctions of the fluid velocity field over a simple square domain, and used it to advect (i.e.~push) a particulate through space. These eigenfunctions are composed of separable products of sines and cosines, and the results visually correspond closely to classic Chladni patterns (Fig.~\ref{fig:chladni-plate}, right).
 
-\begin{figure*}
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/laplacians/plot1.eps}
-	\end{subfigure}
-	%	
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/laplacians/plot2.eps}
-	\end{subfigure}
-	%
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/laplacians/plot3.eps}
-	\end{subfigure}
-	%
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/laplacians/plot4.eps}
-	\end{subfigure}
-	\caption{Analytic fluid velocity eigenfunctions on a cube. \todo{ADJ: Is this the kind of figure you had in mind, Ted?}}
-\end{figure*}
-
+%\begin{figure*}
+%	\begin{subfigure}[h]{0.5\textwidth}
+%		\centering
+%		\includegraphics[width=\textwidth]{Figures/laplacians/plot1.eps}
+%	\end{subfigure}
+%	%	
+%	\begin{subfigure}[h]{0.5\textwidth}
+%		\centering
+%		\includegraphics[width=\textwidth]{Figures/laplacians/plot2.eps}
+%	\end{subfigure}
+%	%
+%	\begin{subfigure}[h]{0.5\textwidth}
+%		\centering
+%		\includegraphics[width=\textwidth]{Figures/laplacians/plot3.eps}
+%	\end{subfigure}
+%	%
+%	\begin{subfigure}[h]{0.5\textwidth}
+%		\centering
+%		\includegraphics[width=\textwidth]{Figures/laplacians/plot4.eps}
+%	\end{subfigure}
+%	\caption{Analytic fluid velocity eigenfunctions on a cube. \todo{ADJ: Is this the kind of figure you had in mind, Ted?}}
+%\end{figure*}
 
 We are interested in generating less classical results, so we prefer the use of ``empirical'' eigenvectors \cite{Ryckelynck2005}. This approach goes many names, such as the Proper Orthogonal Decomposition, Karhunen-Love expansion, or Hotelling transform, but we prefer the eigenvector nomenclature because it clarifies the connection to Chladni patterns. As the name suggests, it involves computing the eigenvectors of an empirically obtained data set, which in this case is the results of a computational fluid dynamics (CFD) simulation.
 
@@ -191,48 +191,16 @@ One of the challenges of subspace methods is the construction of an interesting 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ADJ: These are the more direct analogy to the Chladni figures.
 \begin{figure*}
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/modes/plume0000.png}
-	\end{subfigure}
-	%	
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/modes/plume0001.png}	
-	\end{subfigure}
-	%
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/modes/plume0002.png}
-	\end{subfigure}
-	%
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/modes/plume0003.png}
-	\end{subfigure}
-	%
-\end{figure*}
-\begin{figure*}
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/modes/plume0004.png}	
-	\end{subfigure}
-	%
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/modes/plume0005.png}
-	\end{subfigure}
-	%
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/modes/plume0006.png}		
-	\end{subfigure}
-	%
-	\begin{subfigure}[h]{0.5\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{Figures/modes/plume0007.png}		
-	\end{subfigure}
-	\caption{An assortment of subspace fluid empirical eigenvectors.}
+	\centering
+	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0000.png}
+	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0001.png}	
+	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0002.png}
+	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0003.png}
+	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0004.png}
+	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0005.png}
+	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0006.png}
+	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0007.png}
+	\caption{Empirical eigenvectors discovered by taking the SVD of six different Navier-Stokes simulations.}
 	\label{fig:eigs}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -245,13 +213,13 @@ Other excitation strategies are also possible, including ones that are more clos
 \begin{figure*}
 	\begin{subfigure}[h]{0.5\textwidth}
 		\includegraphics[width=\textwidth]{figures/singulars.eps}
-		\caption{Singular values: r = 150} 
+		\caption{Singular values: $r$ = 150} 
 		\label{fig:singulars}
 	\end{subfigure}
 	%
 	\begin{subfigure}[h]{0.5\textwidth}
 		\includegraphics[width=\textwidth]{figures/remap_freqs.eps}
-		\caption{Remapped frequencies: f = 64 Hz, s = 1.75}
+		\caption{Remapped frequencies: $f$ = 64 Hz, $s$ = 1.75}
 		\label{fig:freqs}
 	\end{subfigure}
 	\caption{Singular values and their remapped frequencies. Note the logarithmic scale on both y-axes. The red lines on both plots indicate the bounds of the human audible frequency range.}
