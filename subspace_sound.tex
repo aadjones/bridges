@@ -15,6 +15,14 @@
 \usepackage{graphicx}                    % For including pictures
 \usepackage{hyperref}                    % For formatting (clickable) URLs
 \usepackage{subcaption}		     % Aaron added this one for certain figures
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+%\hypersetup{colorlinks=false,linkbordercolor=red,linkcolor=green,pdfborderstyle={/S/U/W 1}}
 
 % -----------------------------------------------------------------------------
 
@@ -262,7 +270,7 @@ Given a sequence ${\qq_t}$ of vectors that describe a sampled trajectory $\qq_1,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Synthesis}
 
-With our mappings carried out, we can now produce an audible sound. To illustrate the basic mapping between the visual form of the eigenvectors and their corresponding remapped frequencies, we move sequentially through the eigenvectors and their corresponding frequencies in the supplemental video, {\tt sequential.mov}. This mapping generates a musical scale, and compositional operations can be carried out at the note level. For example, by scrambling the order of the frequencies and adding some rhythmic variety, we can produce a short melody, as demonstrated in the supplemental video, {\tt melody.mov}.
+With our mappings carried out, we can now produce an audible sound. To illustrate the basic mapping between the visual form of the eigenvectors and their corresponding remapped frequencies, we move sequentially through the eigenvectors and their corresponding frequencies in the first supplemental video, {\tt sequential}\footnote{\url{https://youtu.be/cB79S4NwCHc}}. This mapping generates a musical scale, and compositional operations can be carried out at the note level. For example, by scrambling the order of the frequencies and adding some rhythmic variety, we can produce a short melody, as demonstrated in the supplemental video, {\tt melody}\footnote{\url{https://youtu.be/N6fzJXbn2ts}}.
 
 The previous example essentially capture freeze frames of each individual mode. However, a smoother, more sophisticated auditory mapping is needed if we want to capture the flow of the smoke through mixtures of the modes. We use subtractive synthesis as a starting point, which passes a spectrally rich input signal through various filters in order to alter its timbre. In our case, we construct a filter bank that attenuates the input signal everywhere except at the resonant frequencies that correspond to the active modes. A particular amplitude vector $\aaa$ with component $a_i$ then tells us the strength with which each corresponding frequency $f_i$ will resonate. The nature of the input sound also strongly influences the resulting timbre; noise creates a more atmospheric effect, while impulses can create driving rhythmic textures. To match the fluid feel of the smoke propagation, we use broadband noise for the primary sound examples in this paper.
 
@@ -270,7 +278,7 @@ The previous example essentially capture freeze frames of each individual mode. 
 \section*{Time evolution}
 Static sound, while interesting as a new timbre for a few seconds, eventually grows stale. Thus, we would like to capture the time evolution of the subspace trajectory as a dynamic sonic event. This can be achieved by cycling through the the sequence of amplitude vectors $\aaa_1, \ldots, \aaa_T$ corresponding to the subspace trajectory $\qq_1, \ldots, \qq_T$. Using subtractive synthesis, as described above, we can generate a corresponding sound signal that changes subtly at each time step $t$. As previously discussed, different trajectories through the subspace generated different sequences of amplitude vectors. Musically, the unfolding of these trajectories over time occurs on a micro-scale, but the overall effect is perceived smoothly, much as the individual frames of a video fuse together into a continuous motion.
 
-Experimentally, we have explored several different categories of subspace trajectories. In the supplemental video {\tt reduced.mov}, we gradually activate each eigenvector in sequence and push the resulting subspace vector through the reduced-space Navier-Stokes equations. In the supplemental video {\tt sphere\_walk.mov}, we put aside the equations of fluid flow and walk the subspace vector $\qq$ across the surface of a sphere in $\R^r$. 
+Experimentally, we have explored several different categories of subspace trajectories. In the supplemental video {\tt reduced}\footnote{\url{https://youtu.be/_DXRQZYLcdE}}, we gradually activate each eigenvector in sequence and push the resulting subspace vector through the reduced-space Navier-Stokes equations. In the supplemental video {\tt sphere}\footnote{\url{https://youtu.be/y6zraBpH5PA}}, we put aside the equations of fluid flow and walk the subspace vector $\qq$ across the surface of a sphere in $\R^r$. 
 
 \section*{Conclusion}
 
