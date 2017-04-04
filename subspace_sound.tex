@@ -50,6 +50,7 @@ Media Arts and Technology Program\\ University of California, Santa Barbara\\
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\subspace}{\mathbb{S}}
 \newcommand{\boldA}{\mathbf{A}}
+\newcommand{\boldX}{\mathbf{X}}
 \newcommand{\VV}{\mathbf{V}}
 % -----------------------------------------------------------------------------
 % Ted's commands
@@ -89,8 +90,22 @@ In this work, we would like to compute the eigenvectors that arise from the Navi
 
 We are interested in generating less classical results, so we prefer the use of ``empirical'' eigenvectors~\cite{Ryckelynck2005}. This approach goes by many names, such as the Proper Orthogonal Decomposition, Karhunen-Love expansion, or Hotelling transform, but we prefer the eigenvector nomenclature because it clarifies the connection to Chladni patterns. As the name suggests, it involves computing the eigenvectors of an empirically obtained data set, which in this case is the results of a computational fluid dynamics (CFD) simulation.
 
-The eigenvectors are constructed as follows. We have a velocity field defined on a regular three-dimensional grid of $N$ cells, which we consider abstractly as the real vector space $\R^{3N}$. The CFD simulation has been stepped over $T$ timesteps, so it provides $T$ velocity fields defined over this grid. We would like to discover the $r$ most relevant, linearly independent vectors of this data set, $\uu_1, \ldots, \uu_r \in \R^{3N}$. If we arrange the $T$ velocity fields of the CFD simulation into the columns of a matrix, we obtain $\boldA \in \R^{3N \times T}$. Taking the singular value decomposition (SVD) yields $\boldA = \UU \Sigma \VV^T$.
+The eigenvectors are constructed as follows. We have a velocity field defined on a regular three-dimensional grid of $N$ cells, which we consider abstractly as the real vector space $\R^{3N}$. The CFD simulation has been stepped over $T$ timesteps, so it provides $T$ velocity fields defined over this grid. We would like to discover the $r$ most relevant, linearly independent vectors of this data set, $\uu_1, \ldots, \uu_r \in \R^{3N}$. If we arrange the $T$ velocity fields of the CFD simulation into the columns of a matrix, we obtain $\boldX \in \R^{3N \times T}$. Taking the singular value decomposition (SVD) yields $\boldA = \UU \Sigma \VV^T$.
 
+\begin{figure}
+		\centering
+		%\includegraphics[height=0.45\textwidth]{Figures/assembly_matrix.png}
+		\includegraphics[height=0.45\textwidth]{Figures/plume_training.png}
+		%\includegraphics[height=0.45\textwidth]{Figures/U_trunc.png}
+		\includegraphics[height=0.45\textwidth]{Figures/U_trunc_alt.png}
+		%		\vspace*{-1em}
+		\caption{{\em{\bf Left:} Assembling the velocity fields column-wise into a matrix $\boldX$.}\\{\em{\bf Right:} Obtaining the empirical eigenvectors after the singular value decomposition is performed on $\boldX$, yielding $\UU_{\textnormal{trunc}}$. Here, $r<T$ is the number of eigenvectors we retain after truncation.}}
+		\label{fig:matrices}
+\end{figure}
+
+	
+
+	
 The columns of $\UU$ are linearly independent and sorted by how well they characterize the data in $\boldA$. Recalling the rough German translation of {\em eigen} as ``characteristic,'' these columns comprise our empirical eigenvectors. The $\Sigma$ matrix is a diagonal matrix of singular values that quantify the strength of each vector's characterization. In the special case of linear modal analysis, these values correspond directly to audio frequencies, but in the general case of arbitrary CFD simulations that we are considering, this correspondence is no longer direct. However, we will later take the occasional existence of this relationship as a launching point for our own sonification strategy. As we are only interested in the $r$ most important eigenvectors, we usually truncate $\UU$ to its first $r$ columns, yielding $\UU \in \R^{3N \times r}$.
 
 The columns of $\UU$ span an $r$-dimensional subspace $\R^r$ inside of $\R^{3N}$, and $\UU$ itself defines a projection operator. For this reason, these techniques are sometimes called subspace techniques, and vectors that live in this space are called ``subspace'' coordinates, or ``subspace'' vectors. Given the $t$th velocity field from the original CFD simulation $\uu_t \in \R^{3N}$, we can compute a much smaller, subspace approximation of $\uu_t$ by computing $\UU^T \uu_t = \qq_t \in \R^r$. The fact that subspace coordinates can be constructed in this manner has attracted significant interest in the engineering community because it is then often possible to run simulations, even those using the full Navier-Stokes equations, very quickly within this coordinate system \cite{Kim2013}.
