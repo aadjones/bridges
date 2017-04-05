@@ -41,8 +41,10 @@ Media Arts and Technology Program\\ University of California, Santa Barbara\\
 % -----------------------------------------------------------------------------
 % Aaron's convenience commands
 \newcommand{\UU}{\mathbf{U}}
+\newcommand{\truncU}{\mathbf{U}_{\textnormal{trunc}}}
 \newcommand{\uu}{\mathbf{u}}
 \newcommand{\vv}{\mathbf{v}}
+\newcommand{\xx}{\mathbf{x}}
 \newcommand{\utilde}{\mathbf{q}}
 \newcommand{\ff}{\mathbf{f}}
 \newcommand{\qq}{\mathbf{q}}
@@ -73,7 +75,7 @@ The intricate shapes and sounds that arise from the eigenvectors of vibrating Ch
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Introduction}
-Chladni plates beautifully reveal the vibration modes, also known as the eigenvectors, of a rigid plate (Fig.~\ref{fig:chladni-plate}). These eigenvectors can be computed analytically, as they correspond to very small deformations (i.e.~vibrations), and can be written in terms of the Bi-Laplacian operator $(\Delta^2)$ over a square domain \cite{gander2012euler}. These visual representations can be extended to more complex scenarios, where the eigenvectors and their corresponding eigenvalues are instead computed numerically. In this work, we compute the eigenvectors of a dynamic computational fluid dynamics simulation, which involves large deformations instead of small vibrations, and the Navier-Stokes equations in lieu of a Bi-Laplacian. We then visualize the turbulent motion of the eigenvectors in this spectral representation and construct a sonification of the resulting frequencies to produce a mapping between fluid trajectories and sound. The results are organic visual forms with a unique character and a variety of associated sounds that unfold over rich spectral envelopes.
+Chladni plates beautifully reveal the vibration modes, also known as the eigenvectors, of a rigid plate (Fig.~\ref{fig:chladni-plate}). These eigenvectors can be computed analytically, as they correspond to very small deformations (i.e.~vibrations), and can be written in terms of a single differential operator over a square domain \cite{gander2012euler}. These visual representations can be extended to more complex scenarios, where the eigenvectors and their corresponding eigenvalues are instead computed numerically. In this work, we compute the eigenvectors of a dynamic computational fluid dynamics simulation, which involves large deformations instead of small vibrations, and the Navier-Stokes equations in lieu of a single differential operator. We then visualize the turbulent motion of the eigenvectors in this spectral representation and construct a sonification of the resulting frequencies to produce a mapping between fluid trajectories and sound. The results are organic visual forms with a unique character and a variety of associated sounds that unfold over rich spectral envelopes.
 
 \begin{figure}
 		\centering
@@ -84,13 +86,24 @@ Chladni plates beautifully reveal the vibration modes, also known as the eigenve
 		\label{fig:chladni-plate}
 \end{figure}
 
+\section*{Computational Fluid Dynamics Preliminaries}
+We begin with a brief discussion of some fundamental techniques in computational fluid dynamics (CFD). Fluid flow is typically represented by a velocity fields, which associate a velocity vector to each point in space. For computational purposes, we regularly partition space discretely into many small cells so that each cell has an associated velocity vector (Fig.~\ref{fig:velocity-field}). To create animations, the velocity fields must also evolve over time. To that end, the incompressible Navier-Stokes equations are a well-known set of differential equations which model the time evolution of fluid flow. Although a detailed discussion of these equations is beyond the scope of the current work, on a high level, assuming we have a computational approximation to these equations, this means we can subdivide time into discrete timesteps and simulate the evolution of each velocity vector in each cell as it changes from one timestep to the next. 
+
+\begin{figure}
+		\centering
+		\includegraphics[height=0.5\textwidth]{Figures/velocity_field.png}
+		\caption{\em A $2\textnormal{D}$ velocity field on a regular grid.}
+		\label{fig:velocity-field}
+\end{figure}
+
 \section*{Empirical Eigenvectors of a Fluid}
+In this section, we would like to discover a characteristic set of velocity fields that can be combined to generate a wide range of fluid motions. Given a particular mathematical operator, we can study its eigenvectors, or characteristic vectors. These vectors, loosely speaking, are the inputs to the operator that transform by scaling only. Eigenvectors are especially useful if we can describe arbitrary inputs to the operator as a mixture of eigenvectors, since this allows us to easily compute the outputs.
 
-In this work, we would like to compute the eigenvectors that arise from the Navier-Stokes equations for fluid flow. There are several different strategies for computing these vectors. For example, de Witt et al. \cite{deWitt:2012} computed the analytic eigenfunctions of the fluid velocity field over a simple square domain, and used them to advect (i.e.~push) a particulate through space. These eigenfunctions are composed of separable products of sines and cosines, and the results visually correspond closely to classic Chladni patterns (Fig.~\ref{fig:chladni-plate}, right).
+In our work, the operator in question is the Navier-Stokes equations for fluid flow. There are several different strategies for computing the eigenvectors associated with this operator. For example, de Witt et al. \cite{deWitt:2012} computed the analytic eigenfunctions of the fluid velocity field over a simple square domain, and used them to advect (i.e.~push) a particulate through space. These eigenfunctions are composed of separable products of sines and cosines, and the results visually correspond closely to classic Chladni patterns (Fig.~\ref{fig:chladni-plate}, right).
 
-We are interested in generating less classical results, so we prefer the use of ``empirical'' eigenvectors~\cite{Ryckelynck2005}. This approach goes by many names, such as the Proper Orthogonal Decomposition, Karhunen-Love expansion, or Hotelling transform, but we prefer the eigenvector nomenclature because it clarifies the connection to Chladni patterns. As the name suggests, it involves computing the eigenvectors of an empirically obtained data set, which in this case is the results of a computational fluid dynamics (CFD) simulation.
+We are interested in generating less classical results, so we prefer the use of ``empirical'' eigenvectors~\cite{Ryckelynck2005}. This approach goes by many names, such as the Proper Orthogonal Decomposition, Karhunen-Love expansion, or Hotelling transform, but we prefer the eigenvector nomenclature because it clarifies the connection to Chladni patterns. As the name suggests, it involves computing the eigenvectors of an empirically obtained data set, which in this case is the results of a CFD simulation.
 
-The eigenvectors are constructed as follows. We have a velocity field defined on a regular three-dimensional grid of $N$ cells, which we consider abstractly as the real vector space $\R^{3N}$. The CFD simulation has been stepped over $T$ timesteps, so it provides $T$ velocity fields defined over this grid. We would like to discover the $r$ most relevant, linearly independent vectors of this data set, $\uu_1, \ldots, \uu_r \in \R^{3N}$. If we arrange the $T$ velocity fields of the CFD simulation into the columns of a matrix, we obtain $\boldX \in \R^{3N \times T}$. Taking the singular value decomposition (SVD) yields $\boldA = \UU \Sigma \VV^T$.
+Recall from the previous section that our simulation of velocity fields discretizes both space and time. Hence, suppose we have $N$ grid cells and $T$ timesteps. Each particular velocity field at any given timestep can be described by $N$ velocity vectors, one for each cell. In a $3\textnormal{D}$ simulation, this is a list of $3N$ numbers, which we can simply regard as a vector $\xx \in \R^{3N}$. If we assemble these vectors column-wise into a matrix, one for each timestep, we obtain a matrix $\boldX \in \R^{3N \times T}$ (Fig.~\ref{fig:matrices}, left). This construction will allow us to use matrix analysis tools on our simulation---in particular, the singular value decomposition (SVD). Roughly speaking, the SVD discovers a natural set of basis vectors that efficiently characterize the space of desired transformations determined by $\boldX$. More concretely, we obtain a factorization $\boldX = \UU \Sigma \VV^T$, where $\UU$ comprises the basis vectors of interest, $\Sigma$ comprises the associated singular values, which are scalars that determine the relative importance of each basis vector, and $\VV^T$ comprises the right singular vectors, which are discarded for our purposes.
 
 \begin{figure}
 		\centering
@@ -99,18 +112,17 @@ The eigenvectors are constructed as follows. We have a velocity field defined on
 		%\includegraphics[height=0.45\textwidth]{Figures/U_trunc.png}
 		\includegraphics[height=0.45\textwidth]{Figures/U_trunc_alt.png}
 		%		\vspace*{-1em}
-		\caption{{\em{\bf Left:} Assembling the velocity fields column-wise into a matrix $\boldX$.}\\{\em{\bf Right:} Obtaining the empirical eigenvectors after the singular value decomposition is performed on $\boldX$, yielding $\UU_{\textnormal{trunc}}$. Here, $r<T$ is the number of eigenvectors we retain after truncation.}}
+		\caption{{\em{\bf Left:} Assembling the velocity fields column-wise into a matrix $\boldX$. We use simulations of a plume moving toward each face of its bounding box.}\\{\em{\bf Right:} Obtaining the empirical eigenvectors after the singular value decomposition is performed on $\boldX$, yielding $\truncU$. Here, $r<T$ is the number of eigenvectors we retain after truncation.}}
 		\label{fig:matrices}
 \end{figure}
-
 	
+In our situation, the columns of $\UU$ are linearly independent and sorted by how well they characterize the data in $\boldX$. These columns comprise our empirical eigenvectors. Since the data in $\boldX$ is a series of fluid velocity fields, these empirical eigenvectors are the characteristic fluid velocity fields we sought which can be mixed together to describe arbitrary fluid flow. The $\Sigma$ matrix is a diagonal matrix of singular values that quantify the strength of each vector's characterization. In the special case of linear modal analysis, these values correspond directly to audio frequencies, but in the general case of arbitrary CFD simulations that we are considering, this correspondence is no longer direct. However, we will later take the occasional existence of this relationship as a launching point for our own sonification strategy. For reasons of computational space, we are only interested in the $r$ most important eigenvectors; thus, we usually truncate $\UU$ to its first $r$ columns, yielding $\truncU \in \R^{3N \times r}$ (Fig.~\ref{fig:matrices}, right).
 
-	
-The columns of $\UU$ are linearly independent and sorted by how well they characterize the data in $\boldA$. Recalling the rough German translation of {\em eigen} as ``characteristic,'' these columns comprise our empirical eigenvectors. The $\Sigma$ matrix is a diagonal matrix of singular values that quantify the strength of each vector's characterization. In the special case of linear modal analysis, these values correspond directly to audio frequencies, but in the general case of arbitrary CFD simulations that we are considering, this correspondence is no longer direct. However, we will later take the occasional existence of this relationship as a launching point for our own sonification strategy. As we are only interested in the $r$ most important eigenvectors, we usually truncate $\UU$ to its first $r$ columns, yielding $\UU \in \R^{3N \times r}$.
+\todo{ADJ: This next paragraph about subspaces seems pretty dense from their perspective, but I'm not sure how to introduce it more gently.}
 
-The columns of $\UU$ span an $r$-dimensional subspace $\R^r$ inside of $\R^{3N}$, and $\UU$ itself defines a projection operator. For this reason, these techniques are sometimes called subspace techniques, and vectors that live in this space are called ``subspace'' coordinates, or ``subspace'' vectors. Given the $t$th velocity field from the original CFD simulation $\uu_t \in \R^{3N}$, we can compute a much smaller, subspace approximation of $\uu_t$ by computing $\UU^T \uu_t = \qq_t \in \R^r$. The fact that subspace coordinates can be constructed in this manner has attracted significant interest in the engineering community because it is then often possible to run simulations, even those using the full Navier-Stokes equations, very quickly within this coordinate system \cite{Kim2013}.
+The columns of $\truncU$ span an $r$-dimensional subspace $\R^r$ inside of $\R^{3N}$, and $\truncU$ itself defines a projection operator from $\R^{3N}$ to $\R^r$. For this reason, these techniques are sometimes called subspace techniques, and vectors that live in this space are called ``subspace'' coordinates, or ``subspace'' vectors. Given the $t$th velocity field from the original CFD simulation $\xx_t \in \R^{3N}$, we can compute a much smaller, subspace approximation of $\xx_t$ by computing $\truncU^T \xx_t = \qq_t \in \R^r$. The fact that subspace coordinates can be constructed in this manner has attracted significant interest in the engineering community because it is then often possible to run simulations, even those using the full Navier-Stokes equations, very quickly within this coordinate system \cite{Kim2013}.
 
-We are interested in this representation for two additional reasons. First, it is straightforward to interpret the entries in each $\qq_t$ as the amplitudes in a quasi-frequency spectrum. Therefore, they are a convenient starting point for constructing an auditory representation of fluid motion. Second, the projection can be reversed, or ``lifted.'' Given an arbitrary sound $\qq_*$ that was constructed in the quasi-frequency spectrum, we can unambiguously translate that sound into a fluid motion by ``lifting'' the vector back to the $\R^{3N}$ space. This is accomplished by computing $\UU \qq_* = \uu_*$, which yields a velocity field that can then be used to drive a fluid's motion.
+We are interested in this representation for two additional reasons. First, it is straightforward to interpret the entries in each $\qq_t$ as the amplitudes in a quasi-frequency spectrum. Therefore, they are a convenient starting point for constructing an auditory representation of fluid motion. Second, the projection can be reversed, or ``lifted.'' Given an arbitrary sound $\qq_*$ that was constructed in the quasi-frequency spectrum, we can unambiguously translate that sound into a fluid motion by ``lifting'' the vector back to the $\R^{3N}$ space. This is accomplished by computing $\truncU \qq_* = \xx_*\in \R^{3N}$, which yields a velocity field that can then be used to drive a fluid's motion.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Visualization}
@@ -137,7 +149,7 @@ One of the challenges of subspace methods is the construction of an interesting 
 	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0013.png}
 	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0014.png}
 	\includegraphics[width=0.24\textwidth]{Figures/modes/plume0015.png}
-	\caption{\em Empirical eigenvectors discovered by taking the combined SVD of six separate Navier-Stokes simulations.}
+	\caption{\em From left to right; top to bottom: An assortment of $16$ of the $150$ empirical eigenvectors, from lowest singular value to highest,  discovered by taking the combined SVD of six separate Navier-Stokes simulations. Each simulation comprises a plume of smoke moving toward a different face of the bounding box.}
 	\label{fig:eigs}
 \end{figure*}
 
