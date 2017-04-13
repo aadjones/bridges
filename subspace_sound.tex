@@ -141,7 +141,8 @@ Generally, $2N^2 \neq T$, so the matrix $\boldX$ will be rectangular, and an eig
 		\includegraphics[height=0.45\textwidth]{Figures/plume_inverted_training.png}
 		%\includegraphics[height=0.45\textwidth]{Figures/U_trunc.png}
 		%\includegraphics[height=0.45\textwidth]{Figures/U_trunc_alt.png}
-		\includegraphics[height=0.45\textwidth]{Figures/U_trunc_invert.png}
+		%\includegraphics[height=0.45\textwidth]{Figures/U_trunc_invert.png}
+		\includegraphics[height=0.45\textwidth]{Figures/U_trunc_recolored.png}
 		%		\vspace*{-1em}
 		\caption{{\em{\bf Left:} Assembling the velocity fields column-wise into a matrix $\boldX$. We use simulations of a plume moving toward each face of its bounding box.}\\{\em{\bf Right:} Obtaining the empirical eigenvectors after the singular value decomposition is performed on $\boldX$, yielding $\truncU$. Here, $r<T$ is the number of eigenvectors we retain after truncation.}}
 		\label{fig:matrices}
@@ -186,8 +187,9 @@ One of the challenges when using empirical eigenvectors is the construction of a
 	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0013.png}
 	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0014.png}
 	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0015.png}
-	\includegraphics[width=\textwidth]{Figures/modes/montage_inverted.png}
-	\caption{\em From left to right; top to bottom: An assortment of $16$ of the $150$ empirical eigenvectors, from lowest singular value to highest,  discovered by taking the combined SVD of six separate Navier-Stokes simulations. Each simulation comprises a plume of smoke moving toward a different face of the bounding box.}
+	%\includegraphics[width=\textwidth]{Figures/modes/montage_inverted.png}
+	\includegraphics[width=\textwidth]{Figures/modes/montage_recolored.png}
+	\caption{\em From left to right; top to bottom: An assortment of $9$ of the $150$ empirical eigenvectors, from lowest singular value to highest,  discovered by taking the combined SVD of six separate Navier-Stokes simulations. Each simulation comprises a plume of smoke moving toward a different face of the bounding box.}
 	\label{fig:eigs}
 \end{figure*}
 
