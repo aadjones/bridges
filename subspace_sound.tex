@@ -55,6 +55,9 @@ Media Arts and Technology Program\\ University of California, Santa Barbara\\
 \newcommand{\QQ}{\mathbf{Q}}
 \newcommand{\boldX}{\mathbf{X}}
 \newcommand{\VV}{\mathbf{V}}
+\newcommand{\oneD}{1\textnormal{D}}
+\newcommand{\twoD}{2\textnormal{D}}
+\newcommand{\threeD}{3\textnormal{D}}
 % -----------------------------------------------------------------------------
 % Ted's commands
 \newcommand{\todo}[1]{$\spadesuit$ {\bf #1} $\spadesuit$}
@@ -89,7 +92,7 @@ Unlike the Chladni plate case, closed form expressions are not available for the
 		\includegraphics[height=0.3\textwidth]{Figures/chladni_plate.jpg}
 		\includegraphics[height=0.3\textwidth]{Figures/LIC.jpg}
 %		\vspace*{-1em}
-		\caption{{\em{\bf Left:} Chladni patterns realized through a physical experiment. Source: Wikimedia Commons.} {\em{\bf Right:} Analytic 2D eigenvector of the Navier-Stokes equations using the method of de Witt et al.} \cite{deWitt:2012}.}
+		\caption{{\em{\bf Left:} Chladni patterns realized through a physical experiment. Source: Wikimedia Commons.} {\em{\bf Right:} Analytic $\twoD$ eigenvector of the Navier-Stokes equations using the method of de Witt et al.} \cite{deWitt:2012}.}
 		\label{fig:chladni-plate}
 \end{figure}
 
@@ -100,21 +103,21 @@ There are many different ways to understand this relationship, but the scenario 
 
 The $\boldA \qq = \lambda \qq$ relation can be understood to model exactly this behavior. If the entries of $\qq$ are set to be a sine wave over $(0, \pi)$, and the entries of the matrix $\boldA$ are set according to the correct physical principles \footnote{In this case, $\boldA$ would correspond to the wave equation; a Laplacian with Dirichlet boundary conditions.}, then multiplying by $\boldA$ will produced a scaled version of $\qq$. Repeated multiplications will produce a sequence of scaled vectors, mimicking vibration. The eigenvectors thus describe a set of characteristic vibrational shapes that a string is capable of producing. The other columns of the matrix $\QQ$ describe other shapes (``vibration modes'') that a string is capable of producing. For example, sine waves defined over $(0, 2\pi)$, $(0, 3\pi)$ and up to $(0, N \pi)$ will all make an appearance. They are less dominant from a physical perspective, which is why the $(0, \pi)$ version is the one we most visually associate with a vibrating string. This dominance is reflected in the eigenvalue analysis; the $(0, \pi)$ sine wave appears as the first vector in $\QQ$, and each successive column yields progressively less visually and sonically important shapes.
 
-This understanding can be extended to both 2D and 3D, but some effort is needed to rearrange these higher-dimensional phenomena so that they can be packed into a 1D vector $\qq$. For example, we can cut a square 2D plate into a regular grid, and rearrange the 2D values defined over this grid into a 1D vector $\qq$. Again, a matrix $\boldA$ can be assembled according to physical principles so that its eigenvectors correspond to the characteristic vibrations of a square plate. When these eigenvectors are unfolded back into a 2D grid, their visual character is in close agreement with those found by laboratory experiments (Figure \ref{fig:chladni-plate}).
+This understanding can be extended to both $\twoD$ and $\threeD$, but some effort is needed to rearrange these higher-dimensional phenomena so that they can be packed into a $\oneD$ vector $\qq$. For example, we can cut a square $\twoD$ plate into a regular grid, and rearrange the $\twoD$ values defined over this grid into a $\oneD$ vector $\qq$. Again, a matrix $\boldA$ can be assembled according to physical principles so that its eigenvectors correspond to the characteristic vibrations of a square plate. When these eigenvectors are unfolded back into a $\twoD$ grid, their visual character is in close agreement with those found by laboratory experiments (Figure \ref{fig:chladni-plate}).
 
 %\section*{Computational Fluid Dynamics Preliminaries}
 \section*{Empirical Eigenvectors in Computational Fluid Dynamics}
 
 The eigenvector analysis that automatically discovers Chladni patterns does not extend directly to more complex phenomena. Nevertheless, we are interested in discovering analogous patterns that arise in turbulent fluid flows. The equations for these flows are inherently non-linear, while the eigenvector approach is inherently linear, so we will instead use the method of ``empirical'' eigenvectors. In order to motivate and elucidate these techniques, we will introduce some concepts from computational fluid dynamics (CFD).
 
-A fluid is usually defined using a velocity field, where a velocity vector is associated with each point in space. While there are many different ways to represent these fields, we take the perspective from the previous section where a bounded region of space has been diced into a set of regular squares (or, in 3D, cubes). Each cube is then assigned a corresponding velocity vector (Fig.~\ref{fig:velocity-field}), and in order to generate an animation, the vectors must then be evolved over time. There are many different equations that can be used to specify this evolution in time, but we used the well known incompressible Navier-Stokes equations for fluid flow. A detailed discussion of these equations is beyond the scope of the current work, so we will instead assume that we have divided time into a discrete number of steps, and that at each step, the vector inside each cube in our computational grid has a corresponding value. Further details on the numerical integration methods we employ can be found in the paper by Stam \cite{Stam99}.
+A fluid is usually defined using a velocity field, where a velocity vector is associated with each point in space. While there are many different ways to represent these fields, we take the perspective from the previous section where a bounded region of space has been diced into a set of regular squares (or, in $\threeD$, cubes). Each cube is then assigned a corresponding velocity vector (Fig.~\ref{fig:velocity-field}), and in order to generate an animation, the vectors must then be evolved over time. There are many different equations that can be used to specify this evolution in time, but we used the well known incompressible Navier-Stokes equations for fluid flow. A detailed discussion of these equations is beyond the scope of the current work, so we will instead assume that we have divided time into a discrete number of steps, and that at each step, the vector inside each cube in our computational grid has a corresponding value. Further details on the numerical integration methods we employ can be found in the paper by Stam \cite{Stam99}.
 
 %We begin with a brief discussion of some fundamental techniques in computational fluid dynamics (CFD). Fluid flow is typically represented by a velocity fields, which associate a velocity vector to each point in space. For computational purposes, we regularly partition space discretely into many small cells so that each cell has an associated velocity vector (Fig.~\ref{fig:velocity-field}). To create animations, the velocity fields must also evolve over time. To that end, the incompressible Navier-Stokes equations are a well-known set of differential equations which model the time evolution of fluid flow. Although a detailed discussion of these equations is beyond the scope of the current work, on a high level, assuming we have a computational approximation to these equations, this means we can subdivide time into discrete timesteps and simulate the evolution of each velocity vector in each cell as it changes from one timestep to the next. 
 
 \begin{figure}
 		\centering
-		\includegraphics[height=0.3\textwidth]{Figures/velocity_field.png}
-		\caption{\em A $2\textnormal{D}$ velocity field on a regular grid.}
+		\includegraphics[height=0.3\textwidth]{Figures/velocity_2d.png}
+		\caption{\em A $\twoD$ velocity field on a regular grid.}
 		\label{fig:velocity-field}
 \end{figure}
 
@@ -128,7 +131,7 @@ The method of ``empirical'' eigenvectors \cite{Ryckelynck2005}, also known as th
 
 %We are interested in generating less classical results, so we prefer the use of ``empirical'' eigenvectors~\cite{Ryckelynck2005}. This approach goes by many names, such as the Proper Orthogonal Decomposition, Karhunen-Love expansion, or Hotelling transform, but we prefer the eigenvector nomenclature because it clarifies the connection to Chladni patterns. As the name suggests, it involves computing the eigenvectors of an empirically obtained data set, which in this case is the results of a CFD simulation.
 
-Returning to Figure \ref{fig:velocity-field}, we first perform a simulation over a regular $N \times N$ grid for $T$ timesteps. While the simulations in our actual experiments were run in 3D (Figure \ref{fig:eigs}), we will limit discussion to 2D for simplicity. Each grid cell then contains a 2D velocity vector which possesses an $x$ and $y$ component, so the entire grid contains $N \times N$ such vectors. We can thus rearrange these values so that they are packed into a 1D vector $\xx$, which has $2N^2$ entries. We can perform this repacking for each of the $T$ velocity fields from the simulation, and concatenate all of the vectors into a matrix $\boldX$ with $2N^2$ rows and $T$ columns.
+Returning to Figure \ref{fig:velocity-field}, we first perform a simulation over a regular $N \times N$ grid for $T$ timesteps. While the simulations in our actual experiments were run in $\threeD$ (Figure \ref{fig:eigs}), we will limit discussion to $\twoD$ for simplicity. Each grid cell then contains a $\twoD$ velocity vector which possesses an $x$ and $y$ component, so the entire grid contains $N \times N$ such vectors. We can thus rearrange these values so that they are packed into a $\oneD$ vector $\xx$, which has $2N^2$ entries. We can perform this repacking for each of the $T$ velocity fields from the simulation, and concatenate all of the vectors into a matrix $\boldX$ with $2N^2$ rows and $T$ columns.
 
 Generally, $2N^2 \neq T$, so the matrix $\boldX$ will be rectangular, and an eigenvalue analysis can only be performed on square matrices. However, the singular value decomposition (SVD) can always be performed regardless of dimension, and the results possess many eigenvalue-like qualities. Instead of the eigen-decomposition $\boldA = \QQ \Lambda \QQ^T$, the SVD instead yields $\boldX = \UU \Sigma \VV^T$. Similar to the eigen-decomposition, the middle matrix $\Sigma$ is diagonal, and its entries correspond to the ``singular'' values of the matrix $\boldX$. Again, similar to the eigenvalue case, the columns of the left matrix $\UU$ form an ordered set of the most important shapes, or quasi-vibration modes, that appeared during the simulation. The matrix $\VV$ is a $T$-dimensional rotation matrix that was applied to $\boldX$ in order to arrive at $\UU$ and $\Sigma$; for our purposes, it can be discarded.
 
@@ -142,9 +145,10 @@ Generally, $2N^2 \neq T$, so the matrix $\boldX$ will be rectangular, and an eig
 		%\includegraphics[height=0.45\textwidth]{Figures/U_trunc.png}
 		%\includegraphics[height=0.45\textwidth]{Figures/U_trunc_alt.png}
 		%\includegraphics[height=0.45\textwidth]{Figures/U_trunc_invert.png}
-		\includegraphics[height=0.45\textwidth]{Figures/U_trunc_recolored.png}
+		%\includegraphics[height=0.45\textwidth]{Figures/U_trunc_recolored.png}
+		\includegraphics[height=0.45\textwidth]{Figures/U_trunc_T.png}
 		%		\vspace*{-1em}
-		\caption{{\em{\bf Left:} Assembling the velocity fields column-wise into a matrix $\boldX$. We use simulations of a plume moving toward each face of its bounding box.}\\{\em{\bf Right:} Obtaining the empirical eigenvectors after the singular value decomposition is performed on $\boldX$, yielding $\truncU$. Here, $r<T$ is the number of eigenvectors we retain after truncation.}}
+		\caption{{\em{\bf Left:} Assembling the velocity fields column-wise into a matrix $\boldX$. We use simulations of a plume moving toward each face of its bounding box.}\\{\em{\bf Right:} Obtaining the empirical eigenvectors after the singular value decomposition is performed on $\boldX$, yielding $\UU$.}}
 		\label{fig:matrices}
 \end{figure}
 	
@@ -171,25 +175,8 @@ One of the challenges when using empirical eigenvectors is the construction of a
 % ADJ: These are the more direct analogy to the Chladni figures.
 \begin{figure*}
 	\centering
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0000.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0001.png}	
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0002.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0003.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0004.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0005.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0006.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0007.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0008.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0009.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0010.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0011.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0012.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0013.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0014.png}
-	%\includegraphics[width=0.24\textwidth]{Figures/modes/plume0015.png}
-	%\includegraphics[width=\textwidth]{Figures/modes/montage_inverted.png}
 	\includegraphics[width=\textwidth]{Figures/modes/montage_recolored.png}
-	\caption{\em From left to right; top to bottom: An assortment of $9$ of the $150$ empirical eigenvectors, from lowest singular value to highest,  discovered by taking the combined SVD of six separate Navier-Stokes simulations. Each simulation comprises a plume of smoke moving toward a different face of the bounding box.}
+	\caption{\em In reading order: An assortment of nine of the $150$ empirical eigenvectors, from lowest singular value to highest,  discovered by taking the combined SVD of six separate Navier-Stokes simulations. Each simulation comprises a plume of smoke moving toward a different face of the bounding box.}
 	\label{fig:eigs}
 \end{figure*}
 
@@ -202,7 +189,7 @@ Other excitation strategies are also possible, including ones that are more clos
 \begin{figure*}
 	\begin{subfigure}[h]{0.5\textwidth}
 		\includegraphics[width=\textwidth]{figures/singulars.eps}
-		\caption{Singular values: $r$ = 150} 
+		\caption{Singular values: $T$ = 150} 
 		\label{fig:singulars}
 	\end{subfigure}
 	%
@@ -216,26 +203,26 @@ Other excitation strategies are also possible, including ones that are more clos
 
 We will devise a strategy for converting the motion of a fluid into a sound. As mentioned previously, one of the main advantages of the empirical eigenvectors approach is that it already yields a quasi-frequency spectrum. However, some additional choices need to be made before these vectors can be made audible. This sequence of subjective but judicious choices is known as sonification. More precisely, according to Hermann \cite{hermann2008}, sonification is the ``data-dependent, systematic generation of sound.''
 
-We begin by interpreting the $r$ singular values $\sigma_1, \ldots, \sigma_r$ from the singular-value decomposition as characteristic frequencies. There are two immediate concerns about this raw data. First, we can see in Figure \ref{fig:singulars} that the values range over approximately $4$ orders of magnitude, which is approximately $13$ octaves, and decrease to numbers less than $1$. However, the human audible frequency range begins at $20$ Hz and spans approximately $10$ octaves, up to $20000$ Hz \cite{rosen2011signals}. Thus, we must somehow normalize the data to this audible range. Secondly, the singular value spectrum begins with a maximum value and then decreases, whereas an audio spectrum starts at fundamental frequency and then increases. Hence, we invert the singular values. One way to construct a practical mapping is to specify a fundamental frequency $f$ and octave scaling $s$. Writing our audible frequencies as $f_1, \ldots, f_r$, we can define our mapping from singular values to audible frequencies as follows:
+We begin by interpreting the $T$ singular values $\sigma_1, \ldots, \sigma_T$ from the singular-value decomposition as characteristic frequencies. There are two immediate concerns about this raw data. First, we can see in Figure \ref{fig:singulars} that the values range over approximately $4$ orders of magnitude, which is approximately $13$ octaves, and decrease to numbers less than $1$. However, the human audible frequency range begins at $20$ Hz and spans approximately $10$ octaves, up to $20000$ Hz \cite{rosen2011signals}. Thus, we must somehow normalize the data to this audible range. Secondly, the singular value spectrum begins with a maximum value and then decreases, whereas an audio spectrum starts at fundamental frequency and then increases. Hence, we invert the singular values. One way to construct a practical mapping is to specify a fundamental frequency $f$ and octave scaling $s$. Writing our audible frequencies as $f_1, \ldots, f_T$, we can define our mapping from singular values to audible frequencies as follows:
 
 \begin{equation} 
 \begin{aligned}
 f_i &= f \cdot \left(\frac{\sigma_{i}^{-1}}{\sigma_{\textnormal{max}}^{-1}}\right)^{\frac{1}{s}} \\
-&= f \cdot \left(\frac{\sigma_{\textnormal{max}}}{\sigma_i}\right)^{\frac{1}{s}}, \ i = 1, \ldots, r.
+&= f \cdot \left(\frac{\sigma_{\textnormal{max}}}{\sigma_i}\right)^{\frac{1}{s}}, \ i = 1, \ldots, T.
 \end{aligned}
 \end{equation}
 
 The effect of this remapping can be seen in Figure \ref{fig:freqs}, where we have used a fundamental frequency of $f = 64$ Hz and an octave scaling of $s = 1.75$. The spectrum now begins at the fundamental, $f = 64$ Hz, and ranges up to a maximum of approximately $15000$ Hz, which is an acoustically acceptable spread.
 
-With an audible spectrum established, we now choose amplitudes for each individual frequency. These can be mapped from a corresponding subspace vector $\qq \in \R^r$, as each of its $r$ components, $q_1, \ldots, q_r$ can be thought of as an amplitude for the $r$ corresponding frequencies $f_1, \ldots, f_r$. Care must be taken here to ensure that sum of all the amplitudes does not exceed unity gain, as this would lead to clipping. More concretely, we constrain the $L_1$ norm of $\qq$, $\lvert\qq\rvert_1 = \sum_{i=1}^{r}\lvert q_i \rvert$, to be at most $1$. A typical subspace vector $\qq$ may also contain negative components. However, these can simply be thought of as encoding a positive amplitude and a reversal of phase. The phase reversal can be discarded, as its perceivable effect is typically undesirable clicking artifacts.
+With an audible spectrum established, we now choose amplitudes for each individual frequency. These can be mapped from a corresponding subspace vector $\qq \in \R^T$, as each of its $T$ components, $q_1, \ldots, q_T$ can be thought of as an amplitude for the $T$ corresponding frequencies $f_1, \ldots, f_T$. Care must be taken here to ensure that sum of all the amplitudes does not exceed unity gain, as this would lead to clipping. More concretely, we constrain the $L_1$ norm of $\qq$, $\lvert\qq\rvert_1 = \sum_{i=1}^{r}\lvert q_i \rvert$, to be at most $1$. A typical subspace vector $\qq$ may also contain negative components. However, these can simply be thought of as encoding a positive amplitude and a reversal of phase. The phase reversal can be discarded, as its perceivable effect is typically undesirable clicking artifacts.
 
 With these considerations in hand, we design a mapping from a subspace vector $\qq$ to an amplitude vector $\aaa$ of unit $L_1$ norm as follows:
 \begin{equation}
 \begin{aligned}
-a_i &= \frac{\lvert q_i \rvert}{\lvert\qq\rvert_1}, \ i = 1, \ldots, r.
+a_i &= \frac{\lvert q_i \rvert}{\lvert\qq\rvert_1}, \ i = 1, \ldots, T.
 \end{aligned}
 \end{equation}
-Given a sequence $(\qq_t)$ of vectors that describe a sampled trajectory $\qq_1, \ldots, \qq_T$ through the subspace $\R^r$, we can normalize each $\aaa_t$ vector individually. Alternatively, we can determine which $\qq_t$ has the maximum $L_1$ norm, which we denote ${\qq}_\textnormal{max}$, and normalize based on $\lvert\qq_{\textnormal{max}}\rvert_1$. The effect of the former is a relatively uniform volume level, while the latter yields a more variable volume envelope. Each approach has its own musical merit, depending on the compositional situation.
+Given a sequence $(\qq_t)$ of vectors that describe a sampled trajectory $\qq_1, \ldots, \qq_T$ through the subspace $\R^T$, we can normalize each $\aaa_t$ vector individually. Alternatively, we can determine which $\qq_t$ has the maximum $L_1$ norm, which we denote ${\qq}_\textnormal{max}$, and normalize based on $\lvert\qq_{\textnormal{max}}\rvert_1$. The effect of the former is a relatively uniform volume level, while the latter yields a more variable volume envelope. Each approach has its own musical merit, depending on the compositional situation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Synthesis}
@@ -252,7 +239,7 @@ The previous example essentially capture freeze frames of each individual mode. 
 \section*{Time Evolution}
 Static sound, while interesting as a new timbre for a few seconds, eventually grows stale. Thus, we would like to capture the time evolution of the subspace trajectory as a dynamic sonic event. This can be achieved by cycling through the the sequence of amplitude vectors $\aaa_1, \ldots, \aaa_T$ corresponding to the subspace trajectory $\qq_1, \ldots, \qq_T$. Using subtractive synthesis, as described above, we can generate a corresponding sound signal that changes subtly at each time step $t$. As previously discussed, different trajectories through the subspace generate different sequences of amplitude vectors. Musically, the unfolding of these trajectories over time occurs on a micro-scale, but the overall effect is perceived smoothly, much as the individual frames of a video fuse together into a continuous motion.
 
-Experimentally, we have explored several different categories of subspace trajectories. In the third supplemental video \cite{reduced}, we gradually activate each eigenvector in sequence and push the resulting subspace vector through the reduced-space Navier-Stokes equations. In the final supplemental video {\cite{sphere}, we put aside the equations of fluid flow and walk the subspace vector $\qq$ across the surface of a sphere in $\R^r$. 
+Experimentally, we have explored several different categories of subspace trajectories. In the third supplemental video \cite{reduced}, we gradually activate each eigenvector in sequence and push the resulting subspace vector through the reduced-space Navier-Stokes equations. In the final supplemental video {\cite{sphere}, we put aside the equations of fluid flow and walk the subspace vector $\qq$ across the surface of a sphere in $\R^T$. 
 
 % ADJ: Here is the code to generate the footnote citations of the YouTube URLs instead:
 % {\tt reduced}\footnote{\url{https://youtu.be/_DXRQZYLcdE}}
@@ -260,7 +247,7 @@ Experimentally, we have explored several different categories of subspace trajec
 
 \section*{Conclusion}
 
-We have performed a preliminary exploration into the visual and sonic patterns that arise from a generalized form of the Chladni plate experiment. Instead of studying the eigenvectors of the Bi-Laplacian operator, we computed the empirical eigenvectors associated with fluid flow. The resulting forms are visually striking, and the corresponding spectrum can be sonified to produce a promising compositional palette. Suspending the underlying physics and performing an abstract subspace traversal produces intriguing results, which suggest many possible avenues for future work. Indeed, the interplay between the audio and the visual forms seems to form a language that we intend to explore and codify.
+We have performed a preliminary exploration into the visual and sonic patterns that arise from a generalized form of the Chladni plate experiment. Instead of studying the eigenvectors of a rigid vibration, we computed the empirical eigenvectors associated with fluid flow. The resulting forms are visually striking, and the corresponding spectrum can be sonified to produce a promising compositional palette. Suspending the underlying physics and performing an abstract subspace traversal produces intriguing results, which suggest many possible avenues for future work. Indeed, the interplay between the audio and the visual forms seems to form a language that we intend to explore and codify.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
